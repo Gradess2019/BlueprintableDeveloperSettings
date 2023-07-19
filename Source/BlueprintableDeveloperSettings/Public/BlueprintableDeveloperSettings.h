@@ -74,6 +74,8 @@ protected:
 	virtual bool IsAppropriateObjectForSettings(UObject* Object) const;
 
 	void OnObjectsReplaced(const TMap<UObject*, UObject*>& Tuples);
+	void OnFilesLoaded();
+	void OnAssetAdded(const FAssetData& AssetData);
 	void OnAssetRemoved(const FAssetData& AssetData);
 	void OnPackageMarkedDirty(UPackage* Package, bool bArg);
 	void OnBlueprintPreCompile(UBlueprint* InBlueprint);

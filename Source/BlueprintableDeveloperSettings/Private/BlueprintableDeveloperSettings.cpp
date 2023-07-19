@@ -53,8 +53,7 @@ void UBlueprintableDeveloperSettings::PostCDOContruct()
 	const auto bSuperClass = Class == StaticClass();
 	if (bSuperClass)
 	{
-		AssetRegistry->OnFilesLoaded().AddUObject(this, &UBlueprintableDeveloperSettings::LoadBlueprintSettings);
-		AssetRegistry->OnAssetRemoved().AddUObject(this, &UBlueprintableDeveloperSettings::OnAssetRemoved);
+		AssetRegistry->OnFilesLoaded().AddUObject(this, &UBlueprintableDeveloperSettings::OnFilesLoaded);
 		return;
 	}
 
@@ -195,6 +194,26 @@ void UBlueprintableDeveloperSettings::OnObjectsReplaced(const TMap<UObject*, UOb
 	NewObject->RegisterSettings();
 }
 
+void UBlueprintableDeveloperSettings::OnFilesLoaded()
+{
+	LoadBlueprintSettings();
+
+	const auto AssetRegistry = IAssetRegistry::Get();
+	AssetRegistry->OnAssetAdded().AddUObject(this, &UBlueprintableDeveloperSettings::OnAssetAdded);
+	AssetRegistry->OnAssetRemoved().AddUObject(this, &UBlueprintableDeveloperSettings::OnAssetRemoved);
+}
+
+void UBlueprintableDeveloperSettings::OnAssetAdded(const FAssetData& AssetData)
+{
+	const auto AssetClass = AssetData.GetClass();
+	if (!IsValid(AssetClass) || !AssetClass->IsChildOf(StaticClass()))
+	{
+		return;
+	}
+	
+	LoadBlueprintSettings();
+}
+
 void UBlueprintableDeveloperSettings::OnAssetRemoved(const FAssetData& AssetData)
 {
 	const auto DeletedAsset = Cast<UBlueprint>(AssetData.GetAsset());
@@ -247,6 +266,11 @@ void UBlueprintableDeveloperSettings::OnBlueprintPreCompile(UBlueprint* InBluepr
 	}
 
 	Flags |= EBlueprintDeveloperSettingsFlags::Compiling;
+
+	if (!Blueprint.IsValid())
+	{
+		Blueprint = InBlueprint;
+	}
 
 	checkf(Blueprint.IsValid(), TEXT("Blueprint is not valid. Make sure that you have called UBlueprintableDeveloperSettings::LoadBlueprints()"));
 	if (!Blueprint->OnChanged().IsBoundToObject(this))
