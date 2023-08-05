@@ -40,9 +40,15 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "BlueprintableDeveloperSettings", meta = (Bitmask, BitmaskEnum = "/Script/UniversalWatcher.BlueprintDeveloperSettingsFlags"))
 	uint8 Flags = 0;
 
-	UPROPERTY()
-	TWeakObjectPtr<UBlueprint> Blueprint;
-	
+	UPROPERTY(BlueprintReadOnly, Category = "BlueprintableDeveloperSettings")
+	FName ContainerName;
+
+	UPROPERTY(BlueprintReadOnly, Category = "BlueprintableDeveloperSettings")
+	FName CategoryName;
+
+	UPROPERTY(BlueprintReadOnly, Category = "BlueprintableDeveloperSettings")
+	FName SectionName;
+
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BlueprintableDeveloperSettings")
 	FName GetContainerName() const;
@@ -61,6 +67,7 @@ public:
 
 #if WITH_EDITOR
 	virtual void PostCDOContruct() override;
+	virtual void BeginDestroy() override;
 
 	virtual bool Modify(bool bAlwaysMarkDirty) override;
 	virtual bool Rename(const TCHAR* NewName, UObject* NewOuter, ERenameFlags InFlags) override;
@@ -71,9 +78,9 @@ protected:
 	
 	virtual void RegisterSettings();
 	virtual void UnregisterSettings();
-	virtual bool IsAppropriateObjectForSettings(UObject* Object) const;
 
 	void OnObjectsReplaced(const TMap<UObject*, UObject*>& Tuples);
+	void OnPreGarbageCollectConditionalBeginDestroy();
 	void OnFilesLoaded();
 	void OnAssetAdded(const FAssetData& AssetData);
 	void OnAssetRemoved(const FAssetData& AssetData);
