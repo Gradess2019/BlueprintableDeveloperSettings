@@ -19,16 +19,13 @@ class BLUEPRINTABLEDEVELOPERSETTINGS_API UBlueprintableDeveloperSettingsManager 
 	GENERATED_BODY()
 
 protected:
-	static TMap<TSubclassOf<UObject>, FBlueprintableSettingsSectionData> RegisteredSettings;
+	static TMap<uint32, FBlueprintableSettingsSectionData> RegisteredSettings;
 	
 #if WITH_EDITOR
 public:
 	virtual void PostCDOContruct() override;
 	
-	UFUNCTION(BlueprintCallable, Category = "BlueprintableDeveloperSettingsManager")
 	static void RegisterSettings(TSubclassOf<UObject> SettingsClass);
-
-	UFUNCTION(BlueprintCallable, Category = "BlueprintableDeveloperSettingsManager")
 	static void UnregisterSettings(TSubclassOf<UObject> SettingsClass);
 
 	UFUNCTION(BlueprintCallable, Category = "BlueprintableDeveloperSettingsManager")

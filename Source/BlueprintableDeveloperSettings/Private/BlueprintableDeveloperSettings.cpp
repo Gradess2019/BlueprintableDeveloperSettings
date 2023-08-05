@@ -48,20 +48,22 @@ void UBlueprintableDeveloperSettings::PostCDOContruct()
 {
 	Super::PostCDOContruct();
 
-	// const auto AssetRegistry = IAssetRegistry::Get();
 	// const auto Class = GetClass();
 	// const auto bSuperClass = Class == StaticClass();
 	// if (bSuperClass)
 	// {
-	// 	AssetRegistry->OnFilesLoaded().AddUObject(this, &UBlueprintableDeveloperSettings::OnFilesLoaded);
 	// 	return;
 	// }
+
+	// auto* ThisBlueprint = UBlueprint::GetBlueprintFromClass(GetClass());
 	//
-	// if (!UBlueprintableDeveloperSettingsManager::IsAppropriateObjectForSettings(this))
-	// {
-	// 	return;
-	// }
+	// checkf(IsValid(ThisBlueprint), TEXT("ThisBlueprint is not valid"));
+	// checkf(!ThisBlueprint->OnCompiled().IsBoundToObject(this), TEXT("%s->OnCompiled() is already bound to this object"), *ThisBlueprint->GetName());
+	// ThisBlueprint->OnCompiled().AddUObject(this, &UBlueprintableDeveloperSettings::OnBlueprintCompiled);
 	//
+	// checkf(!FCoreUObjectDelegates::OnObjectsReplaced.IsBoundToObject(this), TEXT("FCoreUObjectDelegates::OnObjectsReplaced is already bound to this object"));
+	// FCoreUObjectDelegates::OnObjectsReplaced.AddUObject(this, &UBlueprintableDeveloperSettings::OnObjectsReplaced);
+	
 	// if (!GEditor->OnBlueprintPreCompile().IsBoundToObject(this))
 	// {
 	// 	GEditor->OnBlueprintPreCompile().AddUObject(this, &UBlueprintableDeveloperSettings::OnBlueprintPreCompile);
@@ -74,8 +76,6 @@ void UBlueprintableDeveloperSettings::PostCDOContruct()
 	//
 	// UPackage::PackageMarkedDirtyEvent.AddUObject(this, &UBlueprintableDeveloperSettings::OnPackageMarkedDirty);
 	//
-	// FCoreUObjectDelegates::OnObjectsReplaced.AddUObject(this, &UBlueprintableDeveloperSettings::OnObjectsReplaced);
-	// FCoreUObjectDelegates::PreGarbageCollectConditionalBeginDestroy.AddUObject(this, &UBlueprintableDeveloperSettings::OnPreGarbageCollectConditionalBeginDestroy);
 }
 
 void UBlueprintableDeveloperSettings::BeginDestroy()
@@ -151,40 +151,44 @@ void UBlueprintableDeveloperSettings::RegisterSettings()
 void UBlueprintableDeveloperSettings::UnregisterSettings()
 {
 	checkf(HasAnyFlags(RF_ClassDefaultObject), TEXT("Only CDO can unregister settings"));
-	UBlueprintableDeveloperSettingsManager::RegisterSettings(GetClass());
+	UBlueprintableDeveloperSettingsManager::UnregisterSettings(GetClass());
 }
 
 void UBlueprintableDeveloperSettings::OnObjectsReplaced(const TMap<UObject*, UObject*>& Tuples)
 {
-	// const auto NewObjectPtr = Tuples.Find(this);
+	// const auto* ReplacementPtr = Tuples.Find(this);
 	//
-	// if (!NewObjectPtr)
+	// if (!ReplacementPtr)
 	// {
 	// 	return;
 	// }
 	//
-	// const auto NewObject = Cast<UBlueprintableDeveloperSettings>(*NewObjectPtr);
+	// auto* NewObject = Cast<UBlueprintableDeveloperSettings>(*ReplacementPtr);
 	// if (!IsValid(NewObject) || NewObject == this)
 	// {
 	// 	return;
 	// }
 	//
 	// FCoreUObjectDelegates::OnObjectsReplaced.RemoveAll(this);
-	// UPackage::PackageMarkedDirtyEvent.RemoveAll(this);
+	// // UPackage::PackageMarkedDirtyEvent.RemoveAll(this);
 	//
+	// if (!UBlueprintableDeveloperSettingsManager::IsAppropriateObjectForSettings(NewObject))
+	// {
+	// 	return;
+	// }
+
 	// auto* ThisBlueprint = UBlueprint::GetBlueprintFromClass(GetClass());
 	// if (IsValid(ThisBlueprint))
 	// {
 	// 	ThisBlueprint->OnChanged().RemoveAll(this);
 	// 	ThisBlueprint->OnChanged().AddUObject(NewObject, &UBlueprintableDeveloperSettings::OnBlueprintChanged);
 	// }
-	//
-	// if (!UBlueprintableDeveloperSettingsManager::IsAppropriateObjectForSettings(this))
+
+	// if (UBlueprintableDeveloperSettingsManager::IsSettingsRegistered(GetClass()))
 	// {
-	// 	return;
+	// 	UnregisterSettings();
 	// }
 	//
-	// UnregisterSettings();
 	// NewObject->RegisterSettings();
 }
 
@@ -299,7 +303,7 @@ void UBlueprintableDeveloperSettings::OnBlueprintPreCompile(UBlueprint* InBluepr
 	// }
 }
 
-void UBlueprintableDeveloperSettings::OnBlueprintCompiled()
+void UBlueprintableDeveloperSettings::OnBlueprintCompiled(UBlueprint* InBlueprint)
 {
 	// if (!(Flags & EBlueprintDeveloperSettingsFlags::Compiling))
 	// {

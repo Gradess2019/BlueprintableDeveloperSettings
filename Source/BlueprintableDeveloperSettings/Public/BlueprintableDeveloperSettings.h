@@ -86,7 +86,7 @@ protected:
 	void OnAssetRemoved(const FAssetData& AssetData);
 	void OnPackageMarkedDirty(UPackage* Package, bool bArg);
 	void OnBlueprintPreCompile(UBlueprint* InBlueprint);
-	void OnBlueprintCompiled();
+	void OnBlueprintCompiled(UBlueprint* InBlueprint);
 	void OnBlueprintChanged(UBlueprint* InBlueprint);
 #endif
 };
