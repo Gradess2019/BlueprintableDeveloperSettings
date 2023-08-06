@@ -16,5 +16,7 @@ public:
 	
 protected:
 	virtual void ProcessBlueprintCompiled(const FKismetCompilerContext& CompilationContext, const FBlueprintCompiledData& Data) override;
+	
+	void OnBlueprintCompiled(UBlueprint* Blueprint);
 };
 #endif
