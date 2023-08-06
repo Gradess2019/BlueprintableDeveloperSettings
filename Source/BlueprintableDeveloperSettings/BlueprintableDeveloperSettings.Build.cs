@@ -47,8 +47,9 @@ public class BlueprintableDeveloperSettings : ModuleRules
 			PrivateDependencyModuleNames.AddRange(
 			new string[]
 			{
+				"AssetRegistry",
 				"EditorScriptingUtilities",
-				"UnrealEd",	
+				"UnrealEd",
 			}
 			);
 		}
