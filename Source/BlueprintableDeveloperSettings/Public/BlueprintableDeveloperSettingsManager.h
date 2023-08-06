@@ -20,6 +20,7 @@ class BLUEPRINTABLEDEVELOPERSETTINGS_API UBlueprintableDeveloperSettingsManager 
 
 protected:
 	static TMap<uint32, FBlueprintableSettingsSectionData> RegisteredSettings;
+	static TSet<uint32> RegisteredSettingsHashes;
 	
 #if WITH_EDITOR
 public:
@@ -32,7 +33,10 @@ public:
 	static void LoadBlueprintSettings();
 	
 	UFUNCTION(BlueprintPure, Category = "BlueprintableDeveloperSettingsManager")
-	static bool IsSettingsRegistered(TSubclassOf<UObject> SettingsClass);
+	static bool AreSettingsRegistered(TSubclassOf<UObject> SettingsClass);
+
+	UFUNCTION(BlueprintPure, Category = "BlueprintableDeveloperSettingsManager")
+	static bool AreSettingsRegisteredByData(const FBlueprintableSettingsSectionData& SectionData);
 
 	UFUNCTION(BlueprintPure, Category = "BlueprintableDeveloperSettingsManager")
 	static bool IsAppropriateObjectForSettings(const UObject* Object);

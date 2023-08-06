@@ -17,11 +17,11 @@
 #if WITH_EDITOR
 UBlueprintableDeveloperSettings::UBlueprintableDeveloperSettings()
 {
-	ContainerName = TEXT("Editor");
-	CategoryName = TEXT("Blueprintable Developer Settings");
-	SectionName = TEXT("Base Settings");
-	DisplayName = FText::FromName(GetFName());
-	Description = FText::FromName(GetFName());
+	SectionData.ContainerName = TEXT("Editor");
+	SectionData.CategoryName = TEXT("Blueprintable Developer Settings");
+	SectionData.SectionName = TEXT("Base Settings");
+	SectionData.DisplayName = FText::FromName(GetFName());
+	SectionData.Description = FText::FromName(GetFName());
 }
 
 void UBlueprintableDeveloperSettings::PostCDOContruct()

@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BlueprintableDeveloperSettingsTypes.h"
+
 #include "UObject/Object.h"
 #include "BlueprintableDeveloperSettings.generated.h"
 
@@ -40,38 +42,14 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "BlueprintableDeveloperSettings", meta = (Bitmask, BitmaskEnum = "/Script/UniversalWatcher.BlueprintDeveloperSettingsFlags"))
 	uint8 Flags = 0;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetContainerName", Category = "BlueprintableDeveloperSettings")
-	FName ContainerName;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetCategoryName", Category = "BlueprintableDeveloperSettings")
-	FName CategoryName;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetSectionName", Category = "BlueprintableDeveloperSettings")
-	FName SectionName;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetDisplayName", Category = "BlueprintableDeveloperSettings")
-	FText DisplayName;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetDescription", Category = "BlueprintableDeveloperSettings")
-	FText Description;
+	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetSectionData", Category = "BlueprintableDeveloperSettings")
+	FBlueprintableSettingsSectionData SectionData;
 
 public:
 	UBlueprintableDeveloperSettings();
 	
 	UFUNCTION(BlueprintGetter, Category = "BlueprintableDeveloperSettings")
-	FName GetContainerName() const { return ContainerName; };
-	
-	UFUNCTION(BlueprintGetter, Category = "BlueprintableDeveloperSettings")
-	FName GetCategoryName() const { return CategoryName; };
-	
-	UFUNCTION(BlueprintGetter, Category = "BlueprintableDeveloperSettings")
-	FName GetSectionName() const { return SectionName; };
-	
-	UFUNCTION(BlueprintGetter, Category = "BlueprintableDeveloperSettings")
-	FText GetDisplayName() const { return DisplayName; };
-	
-	UFUNCTION(BlueprintGetter, Category = "BlueprintableDeveloperSettings")
-	FText GetDescription() const { return Description; };
+	const FBlueprintableSettingsSectionData& GetSectionData() const { return SectionData; };
 
 #if WITH_EDITOR
 	virtual void PostCDOContruct() override;
