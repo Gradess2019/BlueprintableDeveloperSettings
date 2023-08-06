@@ -50,6 +50,7 @@ public class BlueprintableDeveloperSettings : ModuleRules
 				"AssetRegistry",
 				"EditorScriptingUtilities",
 				"UnrealEd",
+				"Kismet",
 			}
 			);
 		}

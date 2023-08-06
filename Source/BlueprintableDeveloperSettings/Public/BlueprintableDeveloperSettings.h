@@ -37,6 +37,9 @@ UCLASS(Blueprintable, BlueprintType)
 class BLUEPRINTABLEDEVELOPERSETTINGS_API UBlueprintableDeveloperSettings : public UObject
 {
 	GENERATED_BODY()
+
+	friend class UBlueprintableDeveloperSettingsCompilerExtension;
+	
 protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "BlueprintableDeveloperSettings", meta = (Bitmask, BitmaskEnum = "/Script/UniversalWatcher.BlueprintDeveloperSettingsFlags"))
