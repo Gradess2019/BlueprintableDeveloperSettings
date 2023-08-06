@@ -25,6 +25,11 @@ struct FBlueprintableSettingsSectionData
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "BlueprintableSettingsSection")
 	FText Description;
+
+	bool operator==(const FBlueprintableSettingsSectionData& Other) const
+	{
+		return ContainerName == Other.ContainerName && CategoryName == Other.CategoryName && SectionName == Other.SectionName;
+	}
 };
 
 inline uint32 GetTypeHash(const FBlueprintableSettingsSectionData& Key)

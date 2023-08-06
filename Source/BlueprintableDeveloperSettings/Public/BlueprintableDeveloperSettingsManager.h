@@ -19,7 +19,7 @@ class BLUEPRINTABLEDEVELOPERSETTINGS_API UBlueprintableDeveloperSettingsManager 
 	GENERATED_BODY()
 
 protected:
-	static TMap<uint32, FBlueprintableSettingsSectionData> RegisteredSettings;
+	static TMap<FBlueprintableSettingsSectionData, uint32> RegisteredSettings;
 	
 #if WITH_EDITOR
 public:
@@ -32,10 +32,15 @@ public:
 	static void LoadBlueprintSettings();
 	
 	UFUNCTION(BlueprintPure, Category = "BlueprintableDeveloperSettingsManager")
-	static bool IsSettingsRegistered(TSubclassOf<UObject> SettingsClass);
+	static bool AreSettingsRegistered(TSubclassOf<UObject> SettingsClass);
+
+	UFUNCTION(BlueprintPure, Category = "BlueprintableDeveloperSettingsManager")
+	static bool AreSettingsRegisteredByData(const FBlueprintableSettingsSectionData& SectionData);
 
 	UFUNCTION(BlueprintPure, Category = "BlueprintableDeveloperSettingsManager")
 	static bool IsAppropriateObjectForSettings(const UObject* Object);
+
+	static uint32 GetRegisteredClassId(const FBlueprintableSettingsSectionData& SectionData);
 
 private:
 	static void OnFilesLoaded();

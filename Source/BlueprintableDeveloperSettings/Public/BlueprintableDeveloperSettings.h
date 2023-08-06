@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BlueprintableDeveloperSettingsTypes.h"
+
 #include "UObject/Object.h"
 #include "BlueprintableDeveloperSettings.generated.h"
 
@@ -35,35 +37,22 @@ UCLASS(Blueprintable, BlueprintType)
 class BLUEPRINTABLEDEVELOPERSETTINGS_API UBlueprintableDeveloperSettings : public UObject
 {
 	GENERATED_BODY()
+
+	friend class UBlueprintableDeveloperSettingsCompilerExtension;
+	
 protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "BlueprintableDeveloperSettings", meta = (Bitmask, BitmaskEnum = "/Script/UniversalWatcher.BlueprintDeveloperSettingsFlags"))
 	uint8 Flags = 0;
 
-	UPROPERTY(BlueprintReadOnly, Category = "BlueprintableDeveloperSettings")
-	FName ContainerName;
-
-	UPROPERTY(BlueprintReadOnly, Category = "BlueprintableDeveloperSettings")
-	FName CategoryName;
-
-	UPROPERTY(BlueprintReadOnly, Category = "BlueprintableDeveloperSettings")
-	FName SectionName;
+	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetSectionData", Category = "BlueprintableDeveloperSettings")
+	FBlueprintableSettingsSectionData SectionData;
 
 public:
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BlueprintableDeveloperSettings")
-	FName GetContainerName() const;
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BlueprintableDeveloperSettings")
-	FName GetCategoryName() const;
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BlueprintableDeveloperSettings")
-	FName GetSectionName() const;
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BlueprintableDeveloperSettings")
-	FText GetDisplayName() const;
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BlueprintableDeveloperSettings")
-	FText GetDescription() const;
+	UBlueprintableDeveloperSettings();
+	
+	UFUNCTION(BlueprintGetter, Category = "BlueprintableDeveloperSettings")
+	const FBlueprintableSettingsSectionData& GetSectionData() const { return SectionData; };
 
 #if WITH_EDITOR
 	virtual void PostCDOContruct() override;

@@ -2,11 +2,23 @@
 
 #include "BlueprintableDeveloperSettingsModule.h"
 
+#if WITH_EDITOR
+#include "BlueprintCompilationManager.h"
+#include "BlueprintableDeveloperSettingsCompilerExtension.h"
+#endif
+
 #define LOCTEXT_NAMESPACE "FBlueprintableDeveloperSettingsModule"
 
 void FBlueprintableDeveloperSettingsModule::StartupModule()
 {
 	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
+
+#if WITH_EDITOR
+	CompilerExtension = NewObject<UBlueprintableDeveloperSettingsCompilerExtension>();
+	CompilerExtension->AddToRoot();
+	
+	FBlueprintCompilationManager::RegisterCompilerExtension(UBlueprint::StaticClass(), CompilerExtension);
+#endif
 }
 
 void FBlueprintableDeveloperSettingsModule::ShutdownModule()
