@@ -29,7 +29,23 @@ void UBlueprintableDeveloperSettingsCompilerExtension::ProcessBlueprintCompiled(
 		if (RegisteredClassId != CompiledClassId)
 		{
 			CompilationContext.MessageLog.Error(TEXT("Couldn't register settings for @@. Settings with such Container, Category and Section names are already registered!"), *CompilationContext.Blueprint->GetName());
+			return;
 		}
+
+		UBlueprintableDeveloperSettingsManager::UnregisterSettings(CompilationContext.NewClass);
 	}
+
+	CompilationContext.Blueprint->OnCompiled().AddUObject(this, &UBlueprintableDeveloperSettingsCompilerExtension::OnBlueprintCompiled);
+}
+
+void UBlueprintableDeveloperSettingsCompilerExtension::OnBlueprintCompiled(UBlueprint* Blueprint)
+{
+	Blueprint->OnCompiled().RemoveAll(this);
+	if (Blueprint->Status != BS_UpToDate && Blueprint->Status != BS_UpToDateWithWarnings)
+	{
+		return;
+	}
+	
+	UBlueprintableDeveloperSettingsManager::RegisterSettings(Blueprint->GeneratedClass);
 }
 #endif

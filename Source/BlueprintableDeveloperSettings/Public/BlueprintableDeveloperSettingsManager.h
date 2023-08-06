@@ -37,6 +37,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "BlueprintableDeveloperSettingsManager")
 	static bool AreSettingsRegisteredByData(const FBlueprintableSettingsSectionData& SectionData);
 
+	static const FBlueprintableSettingsSectionData* FindSectionDataByClass(TSubclassOf<UObject> SettingsClass);
+	static const FBlueprintableSettingsSectionData* FindSectionDataByClassId(uint32 ClassId);
+	
 	UFUNCTION(BlueprintPure, Category = "BlueprintableDeveloperSettingsManager")
 	static bool IsAppropriateObjectForSettings(const UObject* Object);
 
