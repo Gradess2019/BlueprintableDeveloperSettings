@@ -40,30 +40,38 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "BlueprintableDeveloperSettings", meta = (Bitmask, BitmaskEnum = "/Script/UniversalWatcher.BlueprintDeveloperSettingsFlags"))
 	uint8 Flags = 0;
 
-	UPROPERTY(BlueprintReadOnly, Category = "BlueprintableDeveloperSettings")
+	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetContainerName", Category = "BlueprintableDeveloperSettings")
 	FName ContainerName;
 
-	UPROPERTY(BlueprintReadOnly, Category = "BlueprintableDeveloperSettings")
+	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetCategoryName", Category = "BlueprintableDeveloperSettings")
 	FName CategoryName;
 
-	UPROPERTY(BlueprintReadOnly, Category = "BlueprintableDeveloperSettings")
+	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetSectionName", Category = "BlueprintableDeveloperSettings")
 	FName SectionName;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetDisplayName", Category = "BlueprintableDeveloperSettings")
+	FText DisplayName;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetDescription", Category = "BlueprintableDeveloperSettings")
+	FText Description;
 
 public:
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BlueprintableDeveloperSettings")
-	FName GetContainerName() const;
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BlueprintableDeveloperSettings")
-	FName GetCategoryName() const;
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BlueprintableDeveloperSettings")
-	FName GetSectionName() const;
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BlueprintableDeveloperSettings")
-	FText GetDisplayName() const;
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BlueprintableDeveloperSettings")
-	FText GetDescription() const;
+	UBlueprintableDeveloperSettings();
+	
+	UFUNCTION(BlueprintGetter, Category = "BlueprintableDeveloperSettings")
+	FName GetContainerName() const { return ContainerName; };
+	
+	UFUNCTION(BlueprintGetter, Category = "BlueprintableDeveloperSettings")
+	FName GetCategoryName() const { return CategoryName; };
+	
+	UFUNCTION(BlueprintGetter, Category = "BlueprintableDeveloperSettings")
+	FName GetSectionName() const { return SectionName; };
+	
+	UFUNCTION(BlueprintGetter, Category = "BlueprintableDeveloperSettings")
+	FText GetDisplayName() const { return DisplayName; };
+	
+	UFUNCTION(BlueprintGetter, Category = "BlueprintableDeveloperSettings")
+	FText GetDescription() const { return Description; };
 
 #if WITH_EDITOR
 	virtual void PostCDOContruct() override;

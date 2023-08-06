@@ -14,36 +14,16 @@
 #endif
 
 
-FName UBlueprintableDeveloperSettings::GetContainerName_Implementation() const
-{
-	return TEXT("Editor");
-}
-
-FName UBlueprintableDeveloperSettings::GetCategoryName_Implementation() const
-{
-	return TEXT("Blueprintable Developer Settings");
-}
-
-FName UBlueprintableDeveloperSettings::GetSectionName_Implementation() const
-{
-	return TEXT("Base Settings");
-}
-
-FText UBlueprintableDeveloperSettings::GetDisplayName_Implementation() const
-{
-	const auto Class = GetClass();
-	auto ClassName = Class->GetName();
-	ClassName.RemoveFromEnd(TEXT("_C"));
-	
-	return FText::FromString(ClassName);
-}
-
-FText UBlueprintableDeveloperSettings::GetDescription_Implementation() const
-{
-	return NSLOCTEXT("BlueprintableDeveloperSettings", "BlueprintableDeveloperSettingsDescription", "Default description");
-}
-
 #if WITH_EDITOR
+UBlueprintableDeveloperSettings::UBlueprintableDeveloperSettings()
+{
+	ContainerName = TEXT("Editor");
+	CategoryName = TEXT("Blueprintable Developer Settings");
+	SectionName = TEXT("Base Settings");
+	DisplayName = FText::FromName(GetFName());
+	Description = FText::FromName(GetFName());
+}
+
 void UBlueprintableDeveloperSettings::PostCDOContruct()
 {
 	Super::PostCDOContruct();
