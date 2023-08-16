@@ -5,12 +5,10 @@
 #include "BlueprintableDeveloperSettingsLibrary.h"
 #include "EditorAssetLibrary.h"
 #include "ISettingsModule.h"
-
 #include "Algo/ForEach.h"
-
 #include "AssetRegistry/IAssetRegistry.h"
 
-TMap<FBlueprintableSettingsSectionData, uint32> UBlueprintableDeveloperSettingsManager::RegisteredSettings;
+TMap<int32, FBlueprintableSettingsSectionData> UBlueprintableDeveloperSettingsManager::RegisteredSettings;
 
 void UBlueprintableDeveloperSettingsManager::PostCDOContruct()
 {
@@ -19,6 +17,14 @@ void UBlueprintableDeveloperSettingsManager::PostCDOContruct()
 	const auto AssetRegistry = IAssetRegistry::Get();
 	AssetRegistry->OnFilesLoaded().AddStatic(UBlueprintableDeveloperSettingsManager::OnFilesLoaded);
 	AssetRegistry->OnAssetAdded().AddStatic(UBlueprintableDeveloperSettingsManager::OnAssetAdded);
+	GUObjectArray.AddUObjectDeleteListener(this);
+}
+
+void UBlueprintableDeveloperSettingsManager::BeginDestroy()
+{
+	GUObjectArray.RemoveUObjectDeleteListener(this);
+	
+	UObject::BeginDestroy();
 }
 
 void UBlueprintableDeveloperSettingsManager::RegisterSettings(TSubclassOf<UObject> SettingsClass)
@@ -45,7 +51,7 @@ void UBlueprintableDeveloperSettingsManager::RegisterSettings(TSubclassOf<UObjec
 	);
 
 	const auto ClassId = SettingsClass->GetUniqueID();
-	RegisteredSettings.Add(SectionData, ClassId);
+	RegisteredSettings.Add(ClassId, SectionData);
 }
 
 void UBlueprintableDeveloperSettingsManager::UnregisterSettings(TSubclassOf<UObject> SettingsClass)
@@ -54,16 +60,23 @@ void UBlueprintableDeveloperSettingsManager::UnregisterSettings(TSubclassOf<UObj
 	checkf(SettingsClass->IsChildOf(UBlueprintableDeveloperSettings::StaticClass()), TEXT("%s is not child of UBlueprintableDeveloperSettings!"), *SettingsClass->GetName());
 	checkf(AreSettingsRegistered(SettingsClass), TEXT("%s is not registered!"), *SettingsClass->GetName());
 
-	const auto* SectionData = FindSectionDataByClass(SettingsClass);
+	const auto ClassId = SettingsClass->GetUniqueID();
+	UnregisterSettings(ClassId);
+}
+
+void UBlueprintableDeveloperSettingsManager::UnregisterSettings(int32 ClassId)
+{
+	checkf(ClassId != INDEX_NONE, TEXT("ClassId is not valid!"));
+	checkf(AreSettingsRegisteredById(ClassId), TEXT("Settings under ClassId %d are not registered!"), ClassId);
+	
+	const auto& SectionData = RegisteredSettings.FindAndRemoveChecked(ClassId);
 
 	auto& SettingsModule = FModuleManager::LoadModuleChecked<ISettingsModule>("Settings");
 	SettingsModule.UnregisterSettings(
-		SectionData->ContainerName,
-		SectionData->CategoryName,
-		SectionData->SectionName
+		SectionData.ContainerName,
+		SectionData.CategoryName,
+		SectionData.SectionName
 	);
-
-	RegisteredSettings.Remove(*SectionData);
 }
 
 void UBlueprintableDeveloperSettingsManager::LoadBlueprintSettings()
@@ -87,19 +100,17 @@ bool UBlueprintableDeveloperSettingsManager::AreSettingsRegistered(TSubclassOf<U
 	checkf(IsValid(SettingsClass), TEXT("SettingsClass is not valid!"));
 	checkf(SettingsClass->IsChildOf(UBlueprintableDeveloperSettings::StaticClass()), TEXT("%s is not child of UBlueprintableDeveloperSettings!"), *SettingsClass->GetName());
 
-	if (IsValid(SettingsClass->ClassDefaultObject))
-	{
-		const auto* SettingsObject = Cast<UBlueprintableDeveloperSettings>(SettingsClass->ClassDefaultObject);
-		const auto& SectionData = SettingsObject->GetSectionData();
-		return AreSettingsRegisteredByData(SectionData);
-	}
+	return AreSettingsRegisteredById(SettingsClass->GetUniqueID());
+}
 
-	return FindSectionDataByClass(SettingsClass) != nullptr;
+bool UBlueprintableDeveloperSettingsManager::AreSettingsRegisteredById(int32 ClassId)
+{
+	return RegisteredSettings.Contains(ClassId);
 }
 
 bool UBlueprintableDeveloperSettingsManager::AreSettingsRegisteredByData(const FBlueprintableSettingsSectionData& SectionData)
 {
-	return RegisteredSettings.Contains(SectionData);
+	return FindClassIdBySectionData(SectionData) != INDEX_NONE;
 }
 
 const FBlueprintableSettingsSectionData* UBlueprintableDeveloperSettingsManager::FindSectionDataByClass(TSubclassOf<UObject> SettingsClass)
@@ -113,8 +124,13 @@ const FBlueprintableSettingsSectionData* UBlueprintableDeveloperSettingsManager:
 
 const FBlueprintableSettingsSectionData* UBlueprintableDeveloperSettingsManager::FindSectionDataByClassId(uint32 ClassId)
 {
-	const auto* FoundData = Algo::FindByPredicate(RegisteredSettings, [ClassId](const auto& Pair) { return Pair.Value == ClassId; });
-	return FoundData ? &FoundData->Key : nullptr;
+	return RegisteredSettings.Find(ClassId);
+}
+
+int32 UBlueprintableDeveloperSettingsManager::FindClassIdBySectionData(const FBlueprintableSettingsSectionData& SectionData)
+{
+	const auto* FoundData = Algo::FindByPredicate(RegisteredSettings, [&SectionData](const auto& Pair) { return Pair.Value == SectionData; });
+	return FoundData != nullptr ? FoundData->Key : INDEX_NONE;
 }
 
 bool UBlueprintableDeveloperSettingsManager::IsAppropriateObjectForSettings(const UObject* Object)
@@ -132,9 +148,17 @@ bool UBlueprintableDeveloperSettingsManager::IsAppropriateObjectForSettings(cons
 	return bCDO && bSettingsClass && !bSuperClass && !bSkeletonClass && !bReinstancedClass;
 }
 
-uint32 UBlueprintableDeveloperSettingsManager::GetRegisteredClassId(const FBlueprintableSettingsSectionData& SectionData)
+void UBlueprintableDeveloperSettingsManager::NotifyUObjectDeleted(const UObjectBase* Object, int32 Index)
 {
-	return AreSettingsRegisteredByData(SectionData) ? RegisteredSettings[SectionData] : 0;
+	if (AreSettingsRegisteredById(Index))
+	{
+		UnregisterSettings(Index);
+	}
+}
+
+void UBlueprintableDeveloperSettingsManager::OnUObjectArrayShutdown()
+{
+	GUObjectArray.RemoveUObjectDeleteListener(this);
 }
 
 void UBlueprintableDeveloperSettingsManager::OnFilesLoaded()
