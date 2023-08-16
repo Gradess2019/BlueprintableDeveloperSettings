@@ -23,7 +23,7 @@ void UBlueprintableDeveloperSettingsCompilerExtension::ProcessBlueprintCompiled(
 
 	if (bSettingsAlreadyRegistered)
 	{
-		const auto RegisteredClassId = UBlueprintableDeveloperSettingsManager::GetRegisteredClassId(SectionData);
+		const auto RegisteredClassId = UBlueprintableDeveloperSettingsManager::FindClassIdBySectionData(SectionData);
 		const auto CompiledClassId = CompilationContext.NewClass->GetUniqueID();
 		
 		if (RegisteredClassId != CompiledClassId)
