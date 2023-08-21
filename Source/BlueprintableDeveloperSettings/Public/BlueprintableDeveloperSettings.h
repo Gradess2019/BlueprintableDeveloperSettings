@@ -62,6 +62,8 @@ public:
 	virtual bool Rename(const TCHAR* NewName, UObject* NewOuter, ERenameFlags InFlags) override;
 	virtual void PostRename(UObject* OldOuter, const FName OldName) override;
 
+	virtual void PostDuplicate(bool bDuplicateForPIE) override;
+
 protected:
 	virtual void LoadBlueprintSettings();
 	
