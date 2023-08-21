@@ -15,8 +15,13 @@ public:
 	
 	
 protected:
-	virtual void ProcessBlueprintCompiled(const FKismetCompilerContext& CompilationContext, const FBlueprintCompiledData& Data) override;
+	FBlueprintableSettingsSectionData GetSectionData(UClass* InClass, UObject* InCDO);
+	bool AreSettingsRegistered(UBlueprint* InBlueprint, UObject* InCDO);
+	bool ValidateSettings(UBlueprint* InBlueprint, UObject* InCDO, UClass* InSettingsClass);
 	
+	virtual void ProcessBlueprintCompiled(const FKismetCompilerContext& CompilationContext, const FBlueprintCompiledData& Data) override;
+
+
 	void OnBlueprintCompiled(UBlueprint* Blueprint);
 };
 #endif

@@ -4,6 +4,7 @@
 #include "BlueprintableDeveloperSettings.h"
 #include "BlueprintableDeveloperSettingsLibrary.h"
 #include "EditorAssetLibrary.h"
+#include "FileHelpers.h"
 #include "ISettingsModule.h"
 #include "Algo/ForEach.h"
 #include "AssetRegistry/IAssetRegistry.h"
@@ -16,7 +17,7 @@ void UBlueprintableDeveloperSettingsManager::PostCDOContruct()
 
 	const auto AssetRegistry = IAssetRegistry::Get();
 	AssetRegistry->OnFilesLoaded().AddStatic(UBlueprintableDeveloperSettingsManager::OnFilesLoaded);
-	AssetRegistry->OnAssetAdded().AddStatic(UBlueprintableDeveloperSettingsManager::OnAssetAdded);
+	AssetRegistry->OnInMemoryAssetCreated().AddStatic(UBlueprintableDeveloperSettingsManager::OnAssetAdded);
 	GUObjectArray.AddUObjectDeleteListener(this);
 }
 
@@ -166,31 +167,23 @@ void UBlueprintableDeveloperSettingsManager::OnFilesLoaded()
 	LoadBlueprintSettings();
 }
 
-void UBlueprintableDeveloperSettingsManager::OnAssetAdded(const FAssetData& AssetData)
+void UBlueprintableDeveloperSettingsManager::OnAssetAdded(UObject* InAsset)
 {
-	// static FName BlueprintClassName = FName(TEXT("Blueprint"));
+	const auto* Blueprint = Cast<UBlueprint>(InAsset);
+	if (!IsValid(Blueprint) || Blueprint->Status == BS_Error)
+	{
+		return;
+	}
 
-	// const auto& AssetClass = AssetData.AssetClassPath;
-	// if (AssetClass.GetAssetName() != BlueprintClassName)
-	// {
-	// 	return;
-	// }
-	//
-	// const auto AddedBlueprint = Cast<UBlueprint>(AssetData.GetAsset());
-	// if (!IsValid(AddedBlueprint))
-	// {
-	// 	return;
-	// }
-	//
-	// const auto GeneratedClass = AddedBlueprint->GeneratedClass;
-	// if (!IsValid(GeneratedClass) || !GeneratedClass->IsChildOf(StaticClass()))
-	// {
-	// 	return;
-	// }
-	//
-	// const auto Package = AssetData.GetPackage();
-	// UEditorLoadingAndSavingUtils::SavePackages({ Package }, false);
-	//
-	// const auto DefaultObject = Cast<UBlueprintableDeveloperSettings>(GeneratedClass->GetDefaultObject());
-	// DefaultObject->Blueprint = AddedBlueprint;
+	const auto GeneratedClass = Blueprint->GeneratedClass;
+	if (!IsValid(GeneratedClass) || !GeneratedClass->IsChildOf(UBlueprintableDeveloperSettings::StaticClass()))
+	{
+		return;
+	}
+
+	const auto Package = Blueprint->GetPackage();
+	GEditor->GetTimerManager()->SetTimerForNextTick([Package]
+	{
+		UEditorLoadingAndSavingUtils::SavePackages({ Package }, false);
+	});
 }

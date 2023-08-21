@@ -104,6 +104,21 @@ void UBlueprintableDeveloperSettings::PostRename(UObject* OldOuter, const FName 
 	Super::PostRename(OldOuter, OldName);
 }
 
+void UBlueprintableDeveloperSettings::PostDuplicate(bool bDuplicateForPIE)
+{
+	UObject::PostDuplicate(bDuplicateForPIE);
+	
+	const auto* CDO = Cast<UBlueprintableDeveloperSettings>(UBlueprintableDeveloperSettings::StaticClass()->ClassDefaultObject);
+	if (IsValid(CDO))
+	{
+		const auto ClassId = UBlueprintableDeveloperSettingsManager::FindClassIdBySectionData(CDO->SectionData);
+		if (ClassId != INDEX_NONE)
+		{
+			UBlueprintableDeveloperSettingsManager::UnregisterSettings(ClassId);
+		}
+	}
+}
+
 void UBlueprintableDeveloperSettings::LoadBlueprintSettings()
 {
 	// TArray<FAssetData> FoundSettingsAssets;

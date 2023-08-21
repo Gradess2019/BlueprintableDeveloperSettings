@@ -56,7 +56,7 @@ public:
 
 private:
 	static void OnFilesLoaded();
-	static void OnAssetAdded(const FAssetData& AssetData);
+	static void OnAssetAdded(UObject* InAsset);
 
 #endif
 	
