@@ -6,8 +6,6 @@
 #include "BlueprintableDeveloperSettings.h"
 #include "DetailCategoryBuilder.h"
 #include "DetailLayoutBuilder.h"
-#include "IPropertyUtilities.h"
-#include "ISettingsModule.h"
 
 #include "Algo/ForEach.h"
 
@@ -25,14 +23,28 @@ void FBlueprintableDeveloperSettingsDetails::CustomizeDetails(IDetailLayoutBuild
 		return;
 	}
 
+	if (IsBlueprintInspector(DetailBuilder))
+	{
+		return;
+	}
+
+	HideSectionData(DetailBuilder);
+}
+
+bool FBlueprintableDeveloperSettingsDetails::IsBlueprintInspector(IDetailLayoutBuilder& DetailBuilder)
+{
 	static FName BlueprintIdentifier(TEXT("BlueprintInspector"));
 	const auto DetailsViewIdentifier = DetailBuilder.GetDetailsView()->GetIdentifier();
 
 	if (DetailsViewIdentifier == BlueprintIdentifier)
 	{
-		return;
+		return true;
 	}
-	
+	return false;
+}
+
+void FBlueprintableDeveloperSettingsDetails::HideSectionData(IDetailLayoutBuilder& DetailBuilder)
+{
 	const auto Property = DetailBuilder.GetProperty(GET_MEMBER_NAME_CHECKED(UBlueprintableDeveloperSettings, SectionData));
 
 	uint32 ChildrenCount;

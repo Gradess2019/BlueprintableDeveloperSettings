@@ -11,4 +11,8 @@ class BLUEPRINTABLEDEVELOPERSETTINGS_API FBlueprintableDeveloperSettingsDetails 
 public:
 	static TSharedRef<IDetailCustomization> MakeInstance();
 	virtual void CustomizeDetails(IDetailLayoutBuilder& DetailBuilder) override;
+
+protected:
+	void HideSectionData(IDetailLayoutBuilder& DetailBuilder);
+	bool IsBlueprintInspector(IDetailLayoutBuilder& DetailBuilder);
 };
