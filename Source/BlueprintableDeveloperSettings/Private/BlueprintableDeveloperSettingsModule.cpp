@@ -2,6 +2,9 @@
 
 #include "BlueprintableDeveloperSettingsModule.h"
 
+#include "BlueprintableDeveloperSettings.h"
+#include "BlueprintableDeveloperSettingsDetails.h"
+
 #if WITH_EDITOR
 #include "BlueprintCompilationManager.h"
 #include "BlueprintableDeveloperSettingsCompilerExtension.h"
@@ -18,6 +21,12 @@ void FBlueprintableDeveloperSettingsModule::StartupModule()
 	CompilerExtension->AddToRoot();
 	
 	FBlueprintCompilationManager::RegisterCompilerExtension(UBlueprint::StaticClass(), CompilerExtension);
+
+	FPropertyEditorModule& PropertyModule = FModuleManager::GetModuleChecked<FPropertyEditorModule>(TEXT("PropertyEditor"));
+	
+	const auto& ClassName = UBlueprintableDeveloperSettings::StaticClass()->GetFName();
+	const auto& DetailLayoutDelegate = FOnGetDetailCustomizationInstance::CreateStatic(FBlueprintableDeveloperSettingsDetails::MakeInstance);
+	PropertyModule.RegisterCustomClassLayout(ClassName, DetailLayoutDelegate);
 #endif
 }
 

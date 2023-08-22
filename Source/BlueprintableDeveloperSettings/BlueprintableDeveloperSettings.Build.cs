@@ -51,6 +51,7 @@ public class BlueprintableDeveloperSettings : ModuleRules
 				"EditorScriptingUtilities",
 				"UnrealEd",
 				"Kismet",
+				"PropertyEditor",
 			}
 			);
 		}
