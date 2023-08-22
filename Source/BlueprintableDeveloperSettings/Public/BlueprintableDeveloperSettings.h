@@ -42,10 +42,6 @@ class BLUEPRINTABLEDEVELOPERSETTINGS_API UBlueprintableDeveloperSettings : publi
 	friend class FBlueprintableDeveloperSettingsDetails;
 	
 protected:
-
-	UPROPERTY(BlueprintReadOnly, Category = "BlueprintableDeveloperSettings", meta = (Bitmask, BitmaskEnum = "/Script/UniversalWatcher.BlueprintDeveloperSettingsFlags"))
-	uint8 Flags = 0;
-
 	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetSectionData", Category = "BlueprintableDeveloperSettings", meta = (ShowOnlyInnerProperties))
 	FBlueprintableSettingsSectionData SectionData;
 
@@ -56,29 +52,11 @@ public:
 	const FBlueprintableSettingsSectionData& GetSectionData() const { return SectionData; };
 
 #if WITH_EDITOR
-	virtual void PostCDOContruct() override;
-	virtual void BeginDestroy() override;
-
-	virtual bool Modify(bool bAlwaysMarkDirty) override;
-	virtual bool Rename(const TCHAR* NewName, UObject* NewOuter, ERenameFlags InFlags) override;
-	virtual void PostRename(UObject* OldOuter, const FName OldName) override;
-
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 	virtual void PostDuplicate(bool bDuplicateForPIE) override;
 
 protected:
-	virtual void LoadBlueprintSettings();
-	
 	virtual void RegisterSettings();
 	virtual void UnregisterSettings();
-
-	void OnObjectsReplaced(const TMap<UObject*, UObject*>& Tuples);
-	void OnPreGarbageCollectConditionalBeginDestroy();
-	void OnFilesLoaded();
-	void OnAssetAdded(const FAssetData& AssetData);
-	void OnAssetRemoved(const FAssetData& AssetData);
-	void OnPackageMarkedDirty(UPackage* Package, bool bArg);
-	void OnBlueprintPreCompile(UBlueprint* InBlueprint);
-	void OnBlueprintCompiled(UBlueprint* InBlueprint);
-	void OnBlueprintChanged(UBlueprint* InBlueprint);
 #endif
 };

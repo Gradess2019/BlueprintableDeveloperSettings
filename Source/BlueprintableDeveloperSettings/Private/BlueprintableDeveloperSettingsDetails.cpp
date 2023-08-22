@@ -81,7 +81,7 @@ void FBlueprintableDeveloperSettingsDetails::HideNonConfigVariables(IDetailLayou
 				continue;
 			}
 
-			const auto Name = FName(Property->GetName());
+			const auto Name = Property->GetFName();
 			const auto PropertyHandle = FindPropertyHandle(DetailBuilder, Name);
 
 			DetailBuilder.HideProperty(PropertyHandle);

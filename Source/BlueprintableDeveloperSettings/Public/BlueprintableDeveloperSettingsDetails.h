@@ -13,8 +13,12 @@ public:
 	virtual void CustomizeDetails(IDetailLayoutBuilder& DetailBuilder) override;
 
 protected:
+	void SetupCallbacks(IDetailLayoutBuilder& DetailBuilder);
+	
 	void HideSectionData(IDetailLayoutBuilder& DetailBuilder);
 	void HideNonConfigVariables(IDetailLayoutBuilder& DetailBuilder);
+
 	bool IsBlueprintInspector(IDetailLayoutBuilder& DetailBuilder);
+
 	TSharedRef<IPropertyHandle> FindPropertyHandle(IDetailLayoutBuilder& DetailBuilder, const FName& PropertyName);
 };
