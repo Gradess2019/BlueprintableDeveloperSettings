@@ -170,7 +170,7 @@ void UBlueprintableDeveloperSettingsManager::OnFilesLoaded()
 void UBlueprintableDeveloperSettingsManager::OnAssetAdded(UObject* InAsset)
 {
 	const auto* Blueprint = Cast<UBlueprint>(InAsset);
-	if (!IsValid(Blueprint) || Blueprint->Status == BS_Error)
+	if (!IsValid(Blueprint))
 	{
 		return;
 	}
