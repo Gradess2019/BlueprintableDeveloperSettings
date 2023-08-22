@@ -11,19 +11,19 @@ struct FBlueprintableSettingsSectionData
 {
 	GENERATED_BODY()
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "BlueprintableSettingsSection")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "BlueprintableSettingsSection")
 	FName ContainerName;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "BlueprintableSettingsSection")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "BlueprintableSettingsSection")
 	FName CategoryName;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "BlueprintableSettingsSection")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "BlueprintableSettingsSection")
 	FName SectionName;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "BlueprintableSettingsSection")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "BlueprintableSettingsSection")
 	FText DisplayName;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "BlueprintableSettingsSection")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "BlueprintableSettingsSection")
 	FText Description;
 
 	bool operator==(const FBlueprintableSettingsSectionData& Other) const

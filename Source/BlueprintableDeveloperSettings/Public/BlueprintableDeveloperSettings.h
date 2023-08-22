@@ -39,13 +39,14 @@ class BLUEPRINTABLEDEVELOPERSETTINGS_API UBlueprintableDeveloperSettings : publi
 	GENERATED_BODY()
 
 	friend class UBlueprintableDeveloperSettingsCompilerExtension;
+	friend class FBlueprintableDeveloperSettingsDetails;
 	
 protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "BlueprintableDeveloperSettings", meta = (Bitmask, BitmaskEnum = "/Script/UniversalWatcher.BlueprintDeveloperSettingsFlags"))
 	uint8 Flags = 0;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetSectionData", Category = "BlueprintableDeveloperSettings")
+	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetSectionData", Category = "BlueprintableDeveloperSettings", meta = (ShowOnlyInnerProperties))
 	FBlueprintableSettingsSectionData SectionData;
 
 public:
