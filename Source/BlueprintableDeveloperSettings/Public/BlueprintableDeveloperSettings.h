@@ -42,14 +42,22 @@ class BLUEPRINTABLEDEVELOPERSETTINGS_API UBlueprintableDeveloperSettings : publi
 	friend class FBlueprintableDeveloperSettingsDetails;
 	
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetSectionData", Category = "BlueprintableDeveloperSettings", meta = (ShowOnlyInnerProperties))
+	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetConfigName", meta=(HideInSettings))
+	FName ConfigName;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetSectionData", Category = "BlueprintableDeveloperSettings", meta = (ShowOnlyInnerProperties, HideInSettings))
 	FBlueprintableSettingsSectionData SectionData;
 
 public:
 	UBlueprintableDeveloperSettings();
+
+	virtual void Serialize(FArchive& Ar) override;
 	
 	UFUNCTION(BlueprintGetter, Category = "BlueprintableDeveloperSettings")
 	const FBlueprintableSettingsSectionData& GetSectionData() const { return SectionData; };
+
+	UFUNCTION(BlueprintGetter, Category = "BlueprintableDeveloperSettings")
+	const FName& GetConfigName() const { return ConfigName; };
 
 #if WITH_EDITOR
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;

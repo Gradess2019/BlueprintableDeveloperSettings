@@ -15,6 +15,8 @@
 #if WITH_EDITOR
 UBlueprintableDeveloperSettings::UBlueprintableDeveloperSettings()
 {
+	ConfigName = TEXT("BlueprintableDeveloperSettings");
+	
 	SectionData.ContainerName = TEXT("Editor");
 	SectionData.CategoryName = TEXT("Blueprintable Developer Settings");
 	SectionData.SectionName = TEXT("Base Settings");
@@ -22,9 +24,35 @@ UBlueprintableDeveloperSettings::UBlueprintableDeveloperSettings()
 	SectionData.Description = FText::FromName(GetFName());
 }
 
+void UBlueprintableDeveloperSettings::Serialize(FArchive& Ar)
+{
+	UObject::Serialize(Ar);
+
+	if (Ar.IsLoading())
+	{
+		auto* Class = GetClass();
+		const auto* ClassDefaultObject = Cast<UBlueprintableDeveloperSettings>(Class->ClassDefaultObject);
+
+		checkf(IsValid(ClassDefaultObject), TEXT("ClassDefaultObject of %s class is not valid"), *Class->GetName());
+		
+		Class->ClassConfigName = ClassDefaultObject->ConfigName;
+		LoadConfig();
+	}
+}
+
 void UBlueprintableDeveloperSettings::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
 	UObject::PostEditChangeProperty(PropertyChangedEvent);
+
+
+	if (PropertyChangedEvent.GetPropertyName() == GET_MEMBER_NAME_CHECKED(UBlueprintableDeveloperSettings, ConfigName))
+	{
+		GetClass()->ClassFlags |= CLASS_Config;
+		GetClass()->ClassConfigName = ConfigName;
+
+		SaveConfig();
+	}
+	
 
 	auto* Package = GetPackage();
 	checkf(IsValid(Package), TEXT("Package is not valid"));
