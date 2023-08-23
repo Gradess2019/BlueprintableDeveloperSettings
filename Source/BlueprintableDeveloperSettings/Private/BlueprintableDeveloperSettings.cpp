@@ -44,15 +44,10 @@ void UBlueprintableDeveloperSettings::PostEditChangeProperty(FPropertyChangedEve
 {
 	UObject::PostEditChangeProperty(PropertyChangedEvent);
 
-
 	if (PropertyChangedEvent.GetPropertyName() == GET_MEMBER_NAME_CHECKED(UBlueprintableDeveloperSettings, ConfigName))
 	{
-		GetClass()->ClassFlags |= CLASS_Config;
-		GetClass()->ClassConfigName = ConfigName;
-
-		SaveConfig();
+		ConfigsCleanup();
 	}
-	
 
 	auto* Package = GetPackage();
 	checkf(IsValid(Package), TEXT("Package is not valid"));
@@ -86,5 +81,21 @@ void UBlueprintableDeveloperSettings::UnregisterSettings()
 {
 	checkf(HasAnyFlags(RF_ClassDefaultObject), TEXT("Only CDO can unregister settings"));
 	UBlueprintableDeveloperSettingsManager::UnregisterSettings(GetClass());
+}
+
+void UBlueprintableDeveloperSettings::ConfigsCleanup()
+{
+	auto* Class = GetClass();
+	const auto& NewConfigName = ConfigName;
+	const auto& OldConfigFileName = GetConfigFilename(this);
+		
+	const auto& ConfigSection = Class->GetPathName();
+		
+	GConfig->EmptySection(*ConfigSection, OldConfigFileName);
+		
+	Class->ClassFlags |= CLASS_Config;
+	Class->ClassConfigName = NewConfigName;
+
+	SaveConfig();
 }
 #endif

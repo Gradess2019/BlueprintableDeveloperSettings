@@ -66,5 +66,6 @@ public:
 protected:
 	virtual void RegisterSettings();
 	virtual void UnregisterSettings();
+	virtual void ConfigsCleanup();
 #endif
 };
