@@ -65,6 +65,8 @@ void UBlueprintableDeveloperSettingsCompilerExtension::ProcessBlueprintCompiled(
 
 void UBlueprintableDeveloperSettingsCompilerExtension::OnBlueprintCompiled(UBlueprint* Blueprint)
 {
+	checkf(Blueprint->GeneratedClass->IsChildOf(UBlueprintableDeveloperSettings::StaticClass()), TEXT("Blueprint should be derived from %s"), *UBlueprintableDeveloperSettings::StaticClass()->GetName());
+	
 	Blueprint->OnCompiled().RemoveAll(this);
 	if (Blueprint->Status != BS_UpToDate && Blueprint->Status != BS_UpToDateWithWarnings)
 	{
@@ -75,7 +77,11 @@ void UBlueprintableDeveloperSettingsCompilerExtension::OnBlueprintCompiled(UBlue
 	{
 		return;
 	}
-	
-	UBlueprintableDeveloperSettingsManager::RegisterSettings(Blueprint->GeneratedClass);
+
+	const auto* SettingsObject = Cast<UBlueprintableDeveloperSettings>(Blueprint->GeneratedClass->ClassDefaultObject);
+	if (SettingsObject->bRegister)
+	{
+		UBlueprintableDeveloperSettingsManager::RegisterSettings(Blueprint->GeneratedClass);
+	}
 }
 #endif

@@ -36,6 +36,13 @@ void UBlueprintableDeveloperSettings::Serialize(FArchive& Ar)
 		checkf(IsValid(ClassDefaultObject), TEXT("ClassDefaultObject of %s class is not valid"), *Class->GetName());
 		
 		Class->ClassConfigName = ClassDefaultObject->ConfigName;
+		Class->ClassFlags |= CLASS_Config;
+		
+		if (ClassDefaultObject->bDefaultConfig)
+		{
+			Class->ClassFlags |= CLASS_DefaultConfig;
+		}
+		
 		LoadConfig();
 	}
 }
@@ -44,10 +51,17 @@ void UBlueprintableDeveloperSettings::PostEditChangeProperty(FPropertyChangedEve
 {
 	UObject::PostEditChangeProperty(PropertyChangedEvent);
 
+	if (PropertyChangedEvent.GetPropertyName() == GET_MEMBER_NAME_CHECKED(UBlueprintableDeveloperSettings, bDefaultConfig))
+	{
+		SwitchConfigs();
+	}
+
 	if (PropertyChangedEvent.GetPropertyName() == GET_MEMBER_NAME_CHECKED(UBlueprintableDeveloperSettings, ConfigName))
 	{
 		ConfigsCleanup();
 	}
+
+	UpdateConfig();
 
 	auto* Package = GetPackage();
 	checkf(IsValid(Package), TEXT("Package is not valid"));
@@ -81,6 +95,39 @@ void UBlueprintableDeveloperSettings::UnregisterSettings()
 {
 	checkf(HasAnyFlags(RF_ClassDefaultObject), TEXT("Only CDO can unregister settings"));
 	UBlueprintableDeveloperSettingsManager::UnregisterSettings(GetClass());
+}
+
+void UBlueprintableDeveloperSettings::SwitchConfigs()
+{
+	auto* Class = GetClass();
+
+	const auto& OldConfigFilename = bDefaultConfig ? GetConfigFilename(this) : GetDefaultConfigFilename();
+	const auto& ConfigSection = Class->GetPathName();
+		
+	if (bDefaultConfig)
+	{
+		Class->ClassFlags |= CLASS_DefaultConfig;
+		TryUpdateDefaultConfigFile();
+	}
+	else
+	{
+		Class->ClassFlags &= ~CLASS_DefaultConfig;
+		SaveConfig();
+	}
+
+	GConfig->EmptySection(*ConfigSection, OldConfigFilename);
+}
+
+void UBlueprintableDeveloperSettings::UpdateConfig()
+{
+	if (bDefaultConfig)
+	{
+		TryUpdateDefaultConfigFile();
+	}
+	else
+	{
+		SaveConfig();
+	}
 }
 
 void UBlueprintableDeveloperSettings::ConfigsCleanup()
