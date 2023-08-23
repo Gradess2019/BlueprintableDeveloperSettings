@@ -3,16 +3,13 @@
 
 #include "BlueprintableDeveloperSettings.h"
 
-#include "BlueprintableDeveloperSettingsManager.h"
 
 #if WITH_EDITOR
+#include "BlueprintableDeveloperSettingsManager.h"
 #include "AssetRegistry/IAssetRegistry.h"
-#include "FileHelpers.h"
-#include "EditorAssetLibrary.h"
 #endif
 
 
-#if WITH_EDITOR
 UBlueprintableDeveloperSettings::UBlueprintableDeveloperSettings()
 {
 	ConfigName = TEXT("BlueprintableDeveloperSettings");
@@ -47,6 +44,7 @@ void UBlueprintableDeveloperSettings::Serialize(FArchive& Ar)
 	}
 }
 
+#if WITH_EDITOR
 void UBlueprintableDeveloperSettings::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
 	UObject::PostEditChangeProperty(PropertyChangedEvent);
@@ -83,18 +81,6 @@ void UBlueprintableDeveloperSettings::PostDuplicate(bool bDuplicateForPIE)
 			UBlueprintableDeveloperSettingsManager::UnregisterSettings(ClassId);
 		}
 	}
-}
-
-void UBlueprintableDeveloperSettings::RegisterSettings()
-{
-	checkf(HasAnyFlags(RF_ClassDefaultObject), TEXT("Only CDO can register settings"));
-	UBlueprintableDeveloperSettingsManager::RegisterSettings(GetClass());
-}
-
-void UBlueprintableDeveloperSettings::UnregisterSettings()
-{
-	checkf(HasAnyFlags(RF_ClassDefaultObject), TEXT("Only CDO can unregister settings"));
-	UBlueprintableDeveloperSettingsManager::UnregisterSettings(GetClass());
 }
 
 void UBlueprintableDeveloperSettings::SwitchConfigs()

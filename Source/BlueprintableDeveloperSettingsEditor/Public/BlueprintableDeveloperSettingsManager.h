@@ -14,7 +14,7 @@ class ISettingsSection;
  * 
  */
 UCLASS()
-class BLUEPRINTABLEDEVELOPERSETTINGS_API UBlueprintableDeveloperSettingsManager : public UObject, public FUObjectArray::FUObjectDeleteListener
+class BLUEPRINTABLEDEVELOPERSETTINGSEDITOR_API UBlueprintableDeveloperSettingsManager : public UObject, public FUObjectArray::FUObjectDeleteListener
 {
 	GENERATED_BODY()
 

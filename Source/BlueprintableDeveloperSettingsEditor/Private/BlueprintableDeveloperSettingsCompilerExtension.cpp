@@ -1,6 +1,5 @@
 ﻿// Copyright 2023 Gradess Games. All Rights Reserved.
 
-#if WITH_EDITOR
 #include "BlueprintableDeveloperSettingsCompilerExtension.h"
 
 #include "BlueprintableDeveloperSettings.h"
@@ -84,4 +83,3 @@ void UBlueprintableDeveloperSettingsCompilerExtension::OnBlueprintCompiled(UBlue
 		UBlueprintableDeveloperSettingsManager::RegisterSettings(Blueprint->GeneratedClass);
 	}
 }
-#endif

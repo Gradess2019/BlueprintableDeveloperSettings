@@ -77,8 +77,6 @@ public:
 	virtual void PostDuplicate(bool bDuplicateForPIE) override;
 
 protected:
-	virtual void RegisterSettings();
-	virtual void UnregisterSettings();
 	virtual void SwitchConfigs();
 	virtual void ConfigsCleanup();
 	virtual void UpdateConfig();
