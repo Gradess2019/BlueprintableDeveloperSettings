@@ -3,12 +3,11 @@
 
 #include "BlueprintableDeveloperSettings.h"
 
-
 #if WITH_EDITOR
-#include "BlueprintableDeveloperSettingsManager.h"
 #include "AssetRegistry/IAssetRegistry.h"
 #endif
 
+UBlueprintableDeveloperSettings::FOnBlueprintableDeveloperSettingsEvent UBlueprintableDeveloperSettings::OnDuplicate;
 
 UBlueprintableDeveloperSettings::UBlueprintableDeveloperSettings()
 {
@@ -75,11 +74,7 @@ void UBlueprintableDeveloperSettings::PostDuplicate(bool bDuplicateForPIE)
 	const auto* CDO = Cast<UBlueprintableDeveloperSettings>(UBlueprintableDeveloperSettings::StaticClass()->ClassDefaultObject);
 	if (IsValid(CDO))
 	{
-		const auto ClassId = UBlueprintableDeveloperSettingsManager::FindClassIdBySectionData(CDO->SectionData);
-		if (ClassId != INDEX_NONE)
-		{
-			UBlueprintableDeveloperSettingsManager::UnregisterSettings(ClassId);
-		}
+		OnDuplicate.Broadcast(CDO);
 	}
 }
 

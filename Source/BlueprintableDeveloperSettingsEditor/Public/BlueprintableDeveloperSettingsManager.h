@@ -57,6 +57,7 @@ public:
 private:
 	static void OnFilesLoaded();
 	static void OnAssetAdded(UObject* InAsset);
+	static void OnSettingsDuplicated(const UBlueprintableDeveloperSettings* InSettingsObject);
 
 #endif
 	
