@@ -1,11 +1,10 @@
 ﻿// Copyright 2023 Gradess Games. All Rights Reserved.
 
 #include "BlueprintableDeveloperSettingsCompilerExtension.h"
-
 #include "BlueprintableDeveloperSettings.h"
 #include "BlueprintableDeveloperSettingsManager.h"
 
-#include "Kismet2/BlueprintEditorUtils.h"
+#include <Kismet2/BlueprintEditorUtils.h>
 
 FBlueprintableSettingsSectionData UBlueprintableDeveloperSettingsCompilerExtension::GetSectionData(UClass* InClass, UObject* InCDO)
 {
@@ -26,7 +25,7 @@ bool UBlueprintableDeveloperSettingsCompilerExtension::ValidateSettings(UBluepri
 		const auto SectionData = GetSectionData(InBlueprint->GeneratedClass, InCDO);
 		const auto RegisteredClassId = UBlueprintableDeveloperSettingsManager::FindClassIdBySectionData(SectionData);
 		const auto CompiledClassId = InSettingsClass->GetUniqueID();
-		
+
 		if (RegisteredClassId != CompiledClassId)
 		{
 			InBlueprint->Message_Error(TEXT("Couldn't register settings for @@. Settings with such Container, Category and Section names are already registered!"), *InBlueprint->GetName());
@@ -34,7 +33,7 @@ bool UBlueprintableDeveloperSettingsCompilerExtension::ValidateSettings(UBluepri
 			return false;
 		}
 	}
-	
+
 	return true;
 }
 
@@ -65,7 +64,7 @@ void UBlueprintableDeveloperSettingsCompilerExtension::ProcessBlueprintCompiled(
 void UBlueprintableDeveloperSettingsCompilerExtension::OnBlueprintCompiled(UBlueprint* Blueprint)
 {
 	checkf(Blueprint->GeneratedClass->IsChildOf(UBlueprintableDeveloperSettings::StaticClass()), TEXT("Blueprint should be derived from %s"), *UBlueprintableDeveloperSettings::StaticClass()->GetName());
-	
+
 	Blueprint->OnCompiled().RemoveAll(this);
 	if (Blueprint->Status != BS_UpToDate && Blueprint->Status != BS_UpToDateWithWarnings)
 	{

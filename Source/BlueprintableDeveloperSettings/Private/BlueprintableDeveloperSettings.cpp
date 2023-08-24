@@ -12,7 +12,7 @@ UBlueprintableDeveloperSettings::FOnBlueprintableDeveloperSettingsEvent UBluepri
 UBlueprintableDeveloperSettings::UBlueprintableDeveloperSettings()
 {
 	ConfigName = TEXT("BlueprintableDeveloperSettings");
-	
+
 	SectionData.ContainerName = TEXT("Editor");
 	SectionData.CategoryName = TEXT("Blueprintable Developer Settings");
 	SectionData.SectionName = TEXT("Base Settings");
@@ -30,15 +30,15 @@ void UBlueprintableDeveloperSettings::Serialize(FArchive& Ar)
 		const auto* ClassDefaultObject = Cast<UBlueprintableDeveloperSettings>(Class->ClassDefaultObject);
 
 		checkf(IsValid(ClassDefaultObject), TEXT("ClassDefaultObject of %s class is not valid"), *Class->GetName());
-		
+
 		Class->ClassConfigName = ClassDefaultObject->ConfigName;
 		Class->ClassFlags |= CLASS_Config;
-		
+
 		if (ClassDefaultObject->bDefaultConfig)
 		{
 			Class->ClassFlags |= CLASS_DefaultConfig;
 		}
-		
+
 		LoadConfig();
 	}
 }
@@ -70,7 +70,7 @@ void UBlueprintableDeveloperSettings::PostEditChangeProperty(FPropertyChangedEve
 void UBlueprintableDeveloperSettings::PostDuplicate(bool bDuplicateForPIE)
 {
 	UObject::PostDuplicate(bDuplicateForPIE);
-	
+
 	const auto* CDO = Cast<UBlueprintableDeveloperSettings>(UBlueprintableDeveloperSettings::StaticClass()->ClassDefaultObject);
 	if (IsValid(CDO))
 	{
@@ -84,7 +84,7 @@ void UBlueprintableDeveloperSettings::SwitchConfigs()
 
 	const auto& OldConfigFilename = bDefaultConfig ? GetConfigFilename(this) : GetDefaultConfigFilename();
 	const auto& ConfigSection = Class->GetPathName();
-		
+
 	if (bDefaultConfig)
 	{
 		Class->ClassFlags |= CLASS_DefaultConfig;
@@ -116,11 +116,11 @@ void UBlueprintableDeveloperSettings::ConfigsCleanup()
 	auto* Class = GetClass();
 	const auto& NewConfigName = ConfigName;
 	const auto& OldConfigFileName = GetConfigFilename(this);
-		
+
 	const auto& ConfigSection = Class->GetPathName();
-		
+
 	GConfig->EmptySection(*ConfigSection, OldConfigFileName);
-		
+
 	Class->ClassFlags |= CLASS_Config;
 	Class->ClassConfigName = NewConfigName;
 

@@ -2,32 +2,12 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include <CoreMinimal.h>
+#include <UObject/Object.h>
+
 #include "BlueprintableDeveloperSettingsTypes.h"
 
-#include "UObject/Object.h"
 #include "BlueprintableDeveloperSettings.generated.h"
-
-#define ENUM_CLASS_FLAGS_UINT8(Enum) \
-	inline uint8& operator|=(uint8& Lhs, Enum Rhs) { return Lhs |= static_cast<uint8>(Rhs); } \
-	inline uint8& operator&=(uint8& Lhs, Enum Rhs) { return Lhs &= static_cast<uint8>(Rhs); } \
-	inline uint8& operator^=(uint8& Lhs, Enum Rhs) { return Lhs ^= static_cast<uint8>(Rhs); } \
-	inline uint8 operator| (uint8 Lhs, Enum Rhs) { return Lhs | static_cast<uint8>(Rhs); } \
-	inline uint8 operator& (uint8 Lhs, Enum Rhs) { return Lhs & static_cast<uint8>(Rhs); } \
-	inline uint8 operator^ (uint8 Lhs, Enum Rhs) { return Lhs ^ static_cast<uint8>(Rhs); } \
-	inline uint8 operator==(uint8 Lhs, Enum Rhs) { return Lhs == static_cast<uint8>(Rhs); } \
-
-UENUM(BlueprintType, meta=(Bitflags))
-enum class EBlueprintDeveloperSettingsFlags : uint8
-{
-	None = 0,
-	
-	Compiling = 1 << 1,
-	Changing = 1 << 2,
-	Renaming = 1 << 3
-};
-ENUM_CLASS_FLAGS(EBlueprintDeveloperSettingsFlags);
-ENUM_CLASS_FLAGS_UINT8(EBlueprintDeveloperSettingsFlags);
 
 
 /**
@@ -43,6 +23,7 @@ class BLUEPRINTABLEDEVELOPERSETTINGS_API UBlueprintableDeveloperSettings : publi
 
 public:
 	DECLARE_EVENT_OneParam(UBlueprintableDeveloperSettings, FOnBlueprintableDeveloperSettingsEvent, const UBlueprintableDeveloperSettings*);
+
 	static FOnBlueprintableDeveloperSettingsEvent OnDuplicate;
 
 protected:

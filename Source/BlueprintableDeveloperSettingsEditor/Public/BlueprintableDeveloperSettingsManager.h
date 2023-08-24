@@ -2,9 +2,11 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-#include "UObject/Object.h"
+#include <CoreMinimal.h>
+#include <UObject/Object.h>
+
 #include "BlueprintableDeveloperSettingsTypes.h"
+
 #include "BlueprintableDeveloperSettingsManager.generated.h"
 
 class UBlueprintableDeveloperSettings;
@@ -20,19 +22,18 @@ class BLUEPRINTABLEDEVELOPERSETTINGSEDITOR_API UBlueprintableDeveloperSettingsMa
 
 protected:
 	static TMap<int32, FBlueprintableSettingsSectionData> RegisteredSettings;
-	
-#if WITH_EDITOR
+
 public:
 	virtual void PostCDOContruct() override;
 	virtual void BeginDestroy() override;
-	
+
 	static void RegisterSettings(TSubclassOf<UObject> SettingsClass);
 	static void UnregisterSettings(TSubclassOf<UObject> SettingsClass);
 	static void UnregisterSettings(int32 ClassId);
 
 	UFUNCTION(BlueprintCallable, Category = "BlueprintableDeveloperSettingsManager")
 	static void LoadBlueprintSettings();
-	
+
 	UFUNCTION(BlueprintPure, Category = "BlueprintableDeveloperSettingsManager")
 	static bool AreSettingsRegistered(TSubclassOf<UObject> SettingsClass);
 
@@ -45,7 +46,7 @@ public:
 	static const FBlueprintableSettingsSectionData* FindSectionDataByClass(TSubclassOf<UObject> SettingsClass);
 	static const FBlueprintableSettingsSectionData* FindSectionDataByClassId(uint32 ClassId);
 	static int32 FindClassIdBySectionData(const FBlueprintableSettingsSectionData& SectionData);
-	
+
 	UFUNCTION(BlueprintPure, Category = "BlueprintableDeveloperSettingsManager")
 	static bool IsAppropriateObjectForSettings(const UObject* Object);
 
@@ -58,7 +59,4 @@ private:
 	static void OnFilesLoaded();
 	static void OnAssetAdded(UObject* InAsset);
 	static void OnSettingsDuplicated(const UBlueprintableDeveloperSettings* InSettingsObject);
-
-#endif
-	
 };

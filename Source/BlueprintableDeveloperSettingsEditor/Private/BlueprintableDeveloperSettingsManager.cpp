@@ -3,11 +3,13 @@
 #include "BlueprintableDeveloperSettingsManager.h"
 #include "BlueprintableDeveloperSettings.h"
 #include "BlueprintableDeveloperSettingsLibrary.h"
-#include "EditorAssetLibrary.h"
-#include "FileHelpers.h"
-#include "ISettingsModule.h"
-#include "Algo/ForEach.h"
-#include "AssetRegistry/IAssetRegistry.h"
+
+#include <EditorAssetLibrary.h>
+#include <FileHelpers.h>
+#include <ISettingsModule.h>
+#include <Algo/ForEach.h>
+#include <AssetRegistry/IAssetRegistry.h>
+
 
 TMap<int32, FBlueprintableSettingsSectionData> UBlueprintableDeveloperSettingsManager::RegisteredSettings;
 
@@ -26,7 +28,7 @@ void UBlueprintableDeveloperSettingsManager::PostCDOContruct()
 void UBlueprintableDeveloperSettingsManager::BeginDestroy()
 {
 	GUObjectArray.RemoveUObjectDeleteListener(this);
-	
+
 	UObject::BeginDestroy();
 }
 
@@ -42,7 +44,7 @@ void UBlueprintableDeveloperSettingsManager::RegisterSettings(TSubclassOf<UObjec
 	checkf(IsValid(SettingsObject), TEXT("SettingsObject is not valid!"));
 
 	const auto& SectionData = SettingsObject->GetSectionData();
-	
+
 	auto& SettingsModule = FModuleManager::LoadModuleChecked<ISettingsModule>("Settings");
 	SettingsModule.RegisterSettings(
 		SectionData.ContainerName,
@@ -71,7 +73,7 @@ void UBlueprintableDeveloperSettingsManager::UnregisterSettings(int32 ClassId)
 {
 	checkf(ClassId != INDEX_NONE, TEXT("ClassId is not valid!"));
 	checkf(AreSettingsRegisteredById(ClassId), TEXT("Settings under ClassId %d are not registered!"), ClassId);
-	
+
 	const auto& SectionData = RegisteredSettings.FindAndRemoveChecked(ClassId);
 
 	auto& SettingsModule = FModuleManager::LoadModuleChecked<ISettingsModule>("Settings");
@@ -92,7 +94,7 @@ void UBlueprintableDeveloperSettingsManager::LoadBlueprintSettings()
 	{
 		checkf(!SettingsAsset.IsAssetLoaded(), TEXT("Asset is already loaded"));
 		const auto& AssetPath = SettingsAsset.PackageName.ToString();
-		
+
 		UEditorAssetLibrary::LoadAsset(AssetPath);
 		// TODO: Add notification if settings object is not valid
 	}
@@ -120,7 +122,7 @@ const FBlueprintableSettingsSectionData* UBlueprintableDeveloperSettingsManager:
 {
 	checkf(IsValid(SettingsClass), TEXT("SettingsClass is not valid!"));
 	checkf(SettingsClass->IsChildOf(UBlueprintableDeveloperSettings::StaticClass()), TEXT("%s is not child of UBlueprintableDeveloperSettings!"), *SettingsClass->GetName());
-	
+
 	const auto ClassId = SettingsClass->GetUniqueID();
 	return FindSectionDataByClassId(ClassId);
 }
@@ -139,7 +141,7 @@ int32 UBlueprintableDeveloperSettingsManager::FindClassIdBySectionData(const FBl
 bool UBlueprintableDeveloperSettingsManager::IsAppropriateObjectForSettings(const UObject* Object)
 {
 	checkf(IsValid(Object), TEXT("Object is not valid"));
-	
+
 	const auto* Class = Object->GetClass();
 	const auto& ClassName = Class->GetName();
 	const auto bCDO = Object->HasAnyFlags(RF_ClassDefaultObject);
@@ -147,7 +149,7 @@ bool UBlueprintableDeveloperSettingsManager::IsAppropriateObjectForSettings(cons
 	const auto bSettingsClass = Class->IsChildOf(UBlueprintableDeveloperSettings::StaticClass());
 	const auto bSkeletonClass = ClassName.StartsWith(TEXT("SKEL_"));
 	const auto bReinstancedClass = ClassName.StartsWith(TEXT("REINST_"));
-	
+
 	return bCDO && bSettingsClass && !bSuperClass && !bSkeletonClass && !bReinstancedClass;
 }
 
@@ -186,7 +188,7 @@ void UBlueprintableDeveloperSettingsManager::OnAssetAdded(UObject* InAsset)
 	const auto Package = Blueprint->GetPackage();
 	GEditor->GetTimerManager()->SetTimerForNextTick([Package]
 	{
-		UEditorLoadingAndSavingUtils::SavePackages({ Package }, false);
+		UEditorLoadingAndSavingUtils::SavePackages({Package}, false);
 	});
 }
 

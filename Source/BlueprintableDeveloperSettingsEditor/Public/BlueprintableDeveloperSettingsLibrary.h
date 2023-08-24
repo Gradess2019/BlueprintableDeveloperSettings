@@ -2,7 +2,8 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include <CoreMinimal.h>
+
 #include "BlueprintableDeveloperSettingsLibrary.generated.h"
 
 UCLASS()

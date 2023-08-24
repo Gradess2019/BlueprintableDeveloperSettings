@@ -2,17 +2,16 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-#include "Modules/ModuleManager.h"
-#include "BlueprintCompilerExtension.h"
+#include <CoreMinimal.h>
+#include <Modules/ModuleManager.h>
+#include <BlueprintCompilerExtension.h>
 
 class FBlueprintableDeveloperSettingsEditorModule : public IModuleInterface
 {
 protected:
 	TObjectPtr<UBlueprintCompilerExtension> CompilerExtension = nullptr;
-	
-public:
 
+public:
 	/** IModuleInterface implementation */
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
