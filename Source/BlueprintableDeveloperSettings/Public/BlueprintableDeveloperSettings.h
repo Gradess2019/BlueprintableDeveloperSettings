@@ -41,6 +41,10 @@ class BLUEPRINTABLEDEVELOPERSETTINGS_API UBlueprintableDeveloperSettings : publi
 	friend class UBlueprintableDeveloperSettingsCompilerExtension;
 	friend class FBlueprintableDeveloperSettingsDetails;
 
+public:
+	DECLARE_EVENT_OneParam(UBlueprintableDeveloperSettings, FOnBlueprintableDeveloperSettingsEvent, const UBlueprintableDeveloperSettings*);
+	static FOnBlueprintableDeveloperSettingsEvent OnDuplicate;
+
 protected:
 	/** Should register these settings */
 	UPROPERTY(EditDefaultsOnly, meta = (HideInSettings))
@@ -77,8 +81,6 @@ public:
 	virtual void PostDuplicate(bool bDuplicateForPIE) override;
 
 protected:
-	virtual void RegisterSettings();
-	virtual void UnregisterSettings();
 	virtual void SwitchConfigs();
 	virtual void ConfigsCleanup();
 	virtual void UpdateConfig();

@@ -4,9 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
+#include "BlueprintCompilerExtension.h"
 
-class FBlueprintableDeveloperSettingsModule : public IModuleInterface
+class FBlueprintableDeveloperSettingsEditorModule : public IModuleInterface
 {
+protected:
+	TObjectPtr<UBlueprintCompilerExtension> CompilerExtension = nullptr;
 	
 public:
 

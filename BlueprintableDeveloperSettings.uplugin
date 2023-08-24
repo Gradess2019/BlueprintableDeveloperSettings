@@ -19,6 +19,11 @@
 			"Name": "BlueprintableDeveloperSettings",
 			"Type": "Runtime",
 			"LoadingPhase": "PostEngineInit"
+		},
+		{
+			"Name": "BlueprintableDeveloperSettingsEditor",
+			"Type": "Editor",
+			"LoadingPhase": "PostEngineInit"
 		}
 	],
 	"Plugins": [

@@ -14,7 +14,7 @@ class ISettingsSection;
  * 
  */
 UCLASS()
-class BLUEPRINTABLEDEVELOPERSETTINGS_API UBlueprintableDeveloperSettingsManager : public UObject, public FUObjectArray::FUObjectDeleteListener
+class BLUEPRINTABLEDEVELOPERSETTINGSEDITOR_API UBlueprintableDeveloperSettingsManager : public UObject, public FUObjectArray::FUObjectDeleteListener
 {
 	GENERATED_BODY()
 
@@ -57,6 +57,7 @@ public:
 private:
 	static void OnFilesLoaded();
 	static void OnAssetAdded(UObject* InAsset);
+	static void OnSettingsDuplicated(const UBlueprintableDeveloperSettings* InSettingsObject);
 
 #endif
 	

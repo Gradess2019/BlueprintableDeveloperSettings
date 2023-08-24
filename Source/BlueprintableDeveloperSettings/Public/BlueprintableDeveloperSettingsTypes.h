@@ -6,6 +6,7 @@
 #include "BlueprintableDeveloperSettingsTypes.generated.h"
 
 class UBlueprintableDeveloperSettings;
+
 USTRUCT(BlueprintType)
 struct FBlueprintableSettingsSectionData
 {

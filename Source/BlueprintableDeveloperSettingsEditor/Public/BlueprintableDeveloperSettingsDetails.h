@@ -6,7 +6,7 @@
 #include "DetailLayoutBuilder.h"
 #include "IDetailCustomization.h"
 
-class BLUEPRINTABLEDEVELOPERSETTINGS_API FBlueprintableDeveloperSettingsDetails : public IDetailCustomization
+class BLUEPRINTABLEDEVELOPERSETTINGSEDITOR_API FBlueprintableDeveloperSettingsDetails : public IDetailCustomization
 {
 public:
 	static TSharedRef<IDetailCustomization> MakeInstance();

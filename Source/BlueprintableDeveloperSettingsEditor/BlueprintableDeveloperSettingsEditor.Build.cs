@@ -2,9 +2,9 @@
 
 using UnrealBuildTool;
 
-public class BlueprintableDeveloperSettings : ModuleRules
+public class BlueprintableDeveloperSettingsEditor : ModuleRules
 {
-	public BlueprintableDeveloperSettings(ReadOnlyTargetRules Target) : base(Target)
+	public BlueprintableDeveloperSettingsEditor(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
@@ -28,6 +28,7 @@ public class BlueprintableDeveloperSettings : ModuleRules
 			new string[]
 			{
 				"Core",
+				"BlueprintableDeveloperSettings"
 				// ... add other public dependencies that you statically link with here ...
 			}
 		);
@@ -40,9 +41,15 @@ public class BlueprintableDeveloperSettings : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+				"AssetRegistry",
+				"EditorScriptingUtilities",
+				"UnrealEd",
+				"Kismet",
+				"PropertyEditor",
 				// ... add private dependencies that you statically link with here ...	
 			}
 		);
+
 
 		DynamicallyLoadedModuleNames.AddRange(
 			new string[]

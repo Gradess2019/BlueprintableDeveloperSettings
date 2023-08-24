@@ -19,6 +19,8 @@ void UBlueprintableDeveloperSettingsManager::PostCDOContruct()
 	AssetRegistry->OnFilesLoaded().AddStatic(UBlueprintableDeveloperSettingsManager::OnFilesLoaded);
 	AssetRegistry->OnInMemoryAssetCreated().AddStatic(UBlueprintableDeveloperSettingsManager::OnAssetAdded);
 	GUObjectArray.AddUObjectDeleteListener(this);
+
+	UBlueprintableDeveloperSettings::OnDuplicate.AddStatic(&UBlueprintableDeveloperSettingsManager::OnSettingsDuplicated);
 }
 
 void UBlueprintableDeveloperSettingsManager::BeginDestroy()
@@ -186,4 +188,13 @@ void UBlueprintableDeveloperSettingsManager::OnAssetAdded(UObject* InAsset)
 	{
 		UEditorLoadingAndSavingUtils::SavePackages({ Package }, false);
 	});
+}
+
+void UBlueprintableDeveloperSettingsManager::OnSettingsDuplicated(const UBlueprintableDeveloperSettings* InSettingsObject)
+{
+	const auto ClassId = FindClassIdBySectionData(InSettingsObject->GetSectionData());
+	if (ClassId != INDEX_NONE)
+	{
+		UnregisterSettings(ClassId);
+	}
 }

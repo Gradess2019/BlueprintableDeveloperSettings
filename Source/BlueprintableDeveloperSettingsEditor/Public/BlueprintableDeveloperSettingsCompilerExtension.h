@@ -1,18 +1,16 @@
 ﻿// Copyright 2023 Gradess Games. All Rights Reserved.
 #pragma once
 
-#if WITH_EDITOR
-
 #include "CoreMinimal.h"
 #include "BlueprintCompilerExtension.h"
 #include "BlueprintableDeveloperSettingsCompilerExtension.generated.h"
 
+struct FBlueprintableSettingsSectionData;
+
 UCLASS()
-class BLUEPRINTABLEDEVELOPERSETTINGS_API UBlueprintableDeveloperSettingsCompilerExtension : public UBlueprintCompilerExtension
+class BLUEPRINTABLEDEVELOPERSETTINGSEDITOR_API UBlueprintableDeveloperSettingsCompilerExtension : public UBlueprintCompilerExtension
 {
 	GENERATED_BODY()
-public:
-	
 	
 protected:
 	FBlueprintableSettingsSectionData GetSectionData(UClass* InClass, UObject* InCDO);
@@ -24,4 +22,3 @@ protected:
 
 	void OnBlueprintCompiled(UBlueprint* Blueprint);
 };
-#endif
