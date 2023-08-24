@@ -11,7 +11,8 @@
 
 
 /**
- * 
+ * This is a base class for developer settings that can be registered in "Project Settings" or "Editor Preferences".
+ * It handles automatic loading and saving of variables marked as "Config Variable" from the config file.
  */
 UCLASS(Blueprintable, BlueprintType)
 class BLUEPRINTABLEDEVELOPERSETTINGS_API UBlueprintableDeveloperSettings : public UObject
@@ -27,16 +28,22 @@ public:
 	static FOnBlueprintableDeveloperSettingsEvent OnDuplicate;
 
 protected:
-	/** Should register these settings */
+	/** Controls whether these settings should be registered. */
 	UPROPERTY(EditDefaultsOnly, meta = (HideInSettings))
 	bool bRegister = true;
 
+	/**
+	 * Controls whether these settings serve as the default configuration.
+	 * If set to true, the values will be automatically saved in the Default*.ini configuration file.
+	 */
 	UPROPERTY(EditDefaultsOnly, meta = (HideInSettings))
 	bool bDefaultConfig = false;
 
+	/** The name identifying the config name. */
 	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetConfigName", meta=(HideInSettings))
 	FName ConfigName;
 
+	/** Data defining the section for these settings, visible in "Project Settings" / "Editor Preferences" */
 	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetSectionData", Category = "BlueprintableDeveloperSettings", meta = (ShowOnlyInnerProperties, HideInSettings))
 	FBlueprintableSettingsSectionData SectionData;
 

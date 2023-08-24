@@ -13,7 +13,7 @@ class UBlueprintableDeveloperSettings;
 class ISettingsSection;
 
 /**
- * 
+ * Responsible for managing the registration and loading of settings.
  */
 UCLASS()
 class BLUEPRINTABLEDEVELOPERSETTINGSEDITOR_API UBlueprintableDeveloperSettingsManager : public UObject, public FUObjectArray::FUObjectDeleteListener
