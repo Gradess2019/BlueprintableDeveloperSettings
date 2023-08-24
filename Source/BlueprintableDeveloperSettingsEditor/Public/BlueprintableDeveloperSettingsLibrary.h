@@ -5,11 +5,8 @@
 #include "CoreMinimal.h"
 #include "BlueprintableDeveloperSettingsLibrary.generated.h"
 
-/**
- * 
- */
 UCLASS()
-class BLUEPRINTABLEDEVELOPERSETTINGS_API UBlueprintableDeveloperSettingsLibrary : public UBlueprintFunctionLibrary
+class BLUEPRINTABLEDEVELOPERSETTINGSEDITOR_API UBlueprintableDeveloperSettingsLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 

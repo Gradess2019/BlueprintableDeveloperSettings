@@ -3,14 +3,11 @@
 
 #include "BlueprintableDeveloperSettingsLibrary.h"
 
-#if WITH_EDITOR
 #include "AssetRegistry/IAssetRegistry.h"
 #include "AssetRegistry/AssetRegistryHelpers.h"
-#endif
 
 bool UBlueprintableDeveloperSettingsLibrary::FindBlueprints(const TArray<FTopLevelAssetPath>& ParentClassNames, const TSet<FTopLevelAssetPath>& ExcludedClassNames, TArray<FAssetData>& OutFoundAssets)
 {
-#if WITH_EDITOR
 	TSet<FTopLevelAssetPath> FoundClasses;
 
 	const auto AssetRegistry = IAssetRegistry::Get();
@@ -32,7 +29,4 @@ bool UBlueprintableDeveloperSettingsLibrary::FindBlueprints(const TArray<FTopLev
 	
 	const auto Result = AssetRegistry->EnumerateAssets(Filter, FilterLambda);
 	return Result;
-#else
-	return false;
-#endif
 }
