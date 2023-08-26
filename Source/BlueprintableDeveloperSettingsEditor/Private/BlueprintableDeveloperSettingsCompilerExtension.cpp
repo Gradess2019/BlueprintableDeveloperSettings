@@ -28,7 +28,11 @@ bool UBlueprintableDeveloperSettingsCompilerExtension::ValidateSettings(UBluepri
 
 		if (RegisteredClassId != CompiledClassId)
 		{
+#if ENGINE_MAJOR_VERSION >= 5 && ENGINE_MINOR_VERSION >= 2
 			InBlueprint->Message_Error(TEXT("Couldn't register settings for @@. Settings with such Container, Category and Section names are already registered!"), *InBlueprint->GetName());
+#else
+			InBlueprint->Message_Error(FString::Printf(TEXT("Couldn't register settings for %s. Settings with such Container, Category and Section names are already registered!"), *InBlueprint->GetName()));
+#endif
 			InBlueprint->Status = BS_Error;
 			return false;
 		}
