@@ -29,18 +29,18 @@ public:
 
 protected:
 	/** Controls whether these settings should be registered. */
-	UPROPERTY(EditDefaultsOnly, meta = (HideInSettings))
+	UPROPERTY(EditDefaultsOnly, meta = (HideInSettings), Category = "BlueprintableDeveloperSettings")
 	bool bRegister = true;
 
 	/**
 	 * Controls whether these settings serve as the default configuration.
 	 * If set to true, the values will be automatically saved in the Default*.ini configuration file.
 	 */
-	UPROPERTY(EditDefaultsOnly, meta = (HideInSettings))
+	UPROPERTY(EditDefaultsOnly, meta = (HideInSettings), Category = "BlueprintableDeveloperSettings")
 	bool bDefaultConfig = false;
 
 	/** The name identifying the config name. */
-	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetConfigName", meta=(HideInSettings))
+	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetConfigName", meta=(HideInSettings), Category = "BlueprintableDeveloperSettings")
 	FName ConfigName;
 
 	/** Data defining the section for these settings, visible in "Project Settings" / "Editor Preferences" */
