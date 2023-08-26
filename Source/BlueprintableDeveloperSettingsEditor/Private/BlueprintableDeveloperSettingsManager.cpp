@@ -92,7 +92,11 @@ void UBlueprintableDeveloperSettingsManager::LoadBlueprintSettings()
 
 	for (const auto& SettingsAsset : FoundSettingsAssets)
 	{
-		checkf(!SettingsAsset.IsAssetLoaded(), TEXT("Asset is already loaded"));
+		if (SettingsAsset.IsAssetLoaded())
+		{
+			return;
+		}
+		
 		const auto& AssetPath = SettingsAsset.PackageName.ToString();
 
 		UEditorAssetLibrary::LoadAsset(AssetPath);
