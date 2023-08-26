@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-#include "DetailLayoutBuilder.h"
-#include "IDetailCustomization.h"
+#include <CoreMinimal.h>
+#include <DetailLayoutBuilder.h>
+#include <IDetailCustomization.h>
 
 class BLUEPRINTABLEDEVELOPERSETTINGSEDITOR_API FBlueprintableDeveloperSettingsDetails : public IDetailCustomization
 {

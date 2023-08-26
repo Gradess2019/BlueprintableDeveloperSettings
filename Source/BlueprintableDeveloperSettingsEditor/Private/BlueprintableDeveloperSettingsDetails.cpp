@@ -2,12 +2,11 @@
 
 
 #include "BlueprintableDeveloperSettingsDetails.h"
-
 #include "BlueprintableDeveloperSettings.h"
-#include "DetailCategoryBuilder.h"
-#include "DetailLayoutBuilder.h"
 
-#include "Algo/ForEach.h"
+#include <DetailCategoryBuilder.h>
+#include <DetailLayoutBuilder.h>
+#include <Algo/ForEach.h>
 
 TSharedRef<IDetailCustomization> FBlueprintableDeveloperSettingsDetails::MakeInstance()
 {
@@ -17,7 +16,7 @@ TSharedRef<IDetailCustomization> FBlueprintableDeveloperSettingsDetails::MakeIns
 void FBlueprintableDeveloperSettingsDetails::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 {
 	static FName HideInSettingsMeta(TEXT("HideInSettings"));
-	
+
 	const auto* DetailsView = DetailBuilder.GetDetailsView();
 
 	if (!ensure(DetailsView))

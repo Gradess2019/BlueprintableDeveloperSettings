@@ -2,36 +2,17 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include <CoreMinimal.h>
+#include <UObject/Object.h>
+
 #include "BlueprintableDeveloperSettingsTypes.h"
 
-#include "UObject/Object.h"
 #include "BlueprintableDeveloperSettings.generated.h"
-
-#define ENUM_CLASS_FLAGS_UINT8(Enum) \
-	inline uint8& operator|=(uint8& Lhs, Enum Rhs) { return Lhs |= static_cast<uint8>(Rhs); } \
-	inline uint8& operator&=(uint8& Lhs, Enum Rhs) { return Lhs &= static_cast<uint8>(Rhs); } \
-	inline uint8& operator^=(uint8& Lhs, Enum Rhs) { return Lhs ^= static_cast<uint8>(Rhs); } \
-	inline uint8 operator| (uint8 Lhs, Enum Rhs) { return Lhs | static_cast<uint8>(Rhs); } \
-	inline uint8 operator& (uint8 Lhs, Enum Rhs) { return Lhs & static_cast<uint8>(Rhs); } \
-	inline uint8 operator^ (uint8 Lhs, Enum Rhs) { return Lhs ^ static_cast<uint8>(Rhs); } \
-	inline uint8 operator==(uint8 Lhs, Enum Rhs) { return Lhs == static_cast<uint8>(Rhs); } \
-
-UENUM(BlueprintType, meta=(Bitflags))
-enum class EBlueprintDeveloperSettingsFlags : uint8
-{
-	None = 0,
-	
-	Compiling = 1 << 1,
-	Changing = 1 << 2,
-	Renaming = 1 << 3
-};
-ENUM_CLASS_FLAGS(EBlueprintDeveloperSettingsFlags);
-ENUM_CLASS_FLAGS_UINT8(EBlueprintDeveloperSettingsFlags);
 
 
 /**
- * 
+ * This is a base class for developer settings that can be registered in "Project Settings" or "Editor Preferences".
+ * It handles automatic loading and saving of variables marked as "Config Variable" from the config file.
  */
 UCLASS(Blueprintable, BlueprintType)
 class BLUEPRINTABLEDEVELOPERSETTINGS_API UBlueprintableDeveloperSettings : public UObject
@@ -43,19 +24,26 @@ class BLUEPRINTABLEDEVELOPERSETTINGS_API UBlueprintableDeveloperSettings : publi
 
 public:
 	DECLARE_EVENT_OneParam(UBlueprintableDeveloperSettings, FOnBlueprintableDeveloperSettingsEvent, const UBlueprintableDeveloperSettings*);
+
 	static FOnBlueprintableDeveloperSettingsEvent OnDuplicate;
 
 protected:
-	/** Should register these settings */
-	UPROPERTY(EditDefaultsOnly, meta = (HideInSettings))
+	/** Controls whether these settings should be registered. */
+	UPROPERTY(EditDefaultsOnly, meta = (HideInSettings), Category = "BlueprintableDeveloperSettings")
 	bool bRegister = true;
 
-	UPROPERTY(EditDefaultsOnly, meta = (HideInSettings))
+	/**
+	 * Controls whether these settings serve as the default configuration.
+	 * If set to true, the values will be automatically saved in the Default*.ini configuration file.
+	 */
+	UPROPERTY(EditDefaultsOnly, meta = (HideInSettings), Category = "BlueprintableDeveloperSettings")
 	bool bDefaultConfig = false;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetConfigName", meta=(HideInSettings))
+	/** The name identifying the config name. */
+	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetConfigName", meta=(HideInSettings), Category = "BlueprintableDeveloperSettings")
 	FName ConfigName;
 
+	/** Data defining the section for these settings, visible in "Project Settings" / "Editor Preferences" */
 	UPROPERTY(EditDefaultsOnly, BlueprintGetter = "GetSectionData", Category = "BlueprintableDeveloperSettings", meta = (ShowOnlyInnerProperties, HideInSettings))
 	FBlueprintableSettingsSectionData SectionData;
 

@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright 2023 Gradess Games. All Rights Reserved.
 
 #include "BlueprintableDeveloperSettingsModule.h"
 
@@ -13,5 +13,5 @@ void FBlueprintableDeveloperSettingsModule::ShutdownModule()
 }
 
 #undef LOCTEXT_NAMESPACE
-	
-IMPLEMENT_MODULE(FBlueprintableDeveloperSettingsModule, BlueprintableDeveloperSettingsModule)
+
+IMPLEMENT_MODULE(FBlueprintableDeveloperSettingsModule, BlueprintableDeveloperSettings)

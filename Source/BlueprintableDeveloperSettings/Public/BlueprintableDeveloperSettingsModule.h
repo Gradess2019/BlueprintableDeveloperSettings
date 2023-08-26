@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright 2023 Gradess Games. All Rights Reserved.
 
 #pragma once
 
@@ -7,9 +7,7 @@
 
 class FBlueprintableDeveloperSettingsModule : public IModuleInterface
 {
-	
 public:
-
 	/** IModuleInterface implementation */
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
