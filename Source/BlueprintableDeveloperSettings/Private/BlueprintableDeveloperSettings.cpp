@@ -116,10 +116,17 @@ void UBlueprintableDeveloperSettings::ConfigsCleanup()
 	auto* Class = GetClass();
 	const auto& NewConfigName = ConfigName;
 	const auto& OldConfigFileName = GetConfigFilename(this);
+	const auto& OldDefaultConfigFileName = GetDefaultConfigFilename();
 
+	if (!GConfig->IsKnownConfigName(FName(OldDefaultConfigFileName)))
+	{
+		GConfig->LoadFile(OldDefaultConfigFileName);
+	}
+	
 	const auto& ConfigSection = Class->GetPathName();
 
 	GConfig->EmptySection(*ConfigSection, OldConfigFileName);
+	GConfig->EmptySection(*ConfigSection, OldDefaultConfigFileName);
 
 	Class->ClassFlags |= CLASS_Config;
 	Class->ClassConfigName = NewConfigName;
