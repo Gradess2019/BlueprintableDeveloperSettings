@@ -14,4 +14,4 @@ void FBlueprintableDeveloperSettingsModule::ShutdownModule()
 
 #undef LOCTEXT_NAMESPACE
 
-IMPLEMENT_MODULE(FBlueprintableDeveloperSettingsModule, BlueprintableDeveloperSettingsModule)
+IMPLEMENT_MODULE(FBlueprintableDeveloperSettingsModule, BlueprintableDeveloperSettings)

@@ -18,7 +18,6 @@ void UBlueprintableDeveloperSettingsManager::PostCDOContruct()
 	UObject::PostCDOContruct();
 
 	const auto AssetRegistry = IAssetRegistry::Get();
-	AssetRegistry->OnFilesLoaded().AddStatic(UBlueprintableDeveloperSettingsManager::OnFilesLoaded);
 	AssetRegistry->OnInMemoryAssetCreated().AddStatic(UBlueprintableDeveloperSettingsManager::OnAssetAdded);
 	GUObjectArray.AddUObjectDeleteListener(this);
 
@@ -164,11 +163,6 @@ void UBlueprintableDeveloperSettingsManager::NotifyUObjectDeleted(const UObjectB
 void UBlueprintableDeveloperSettingsManager::OnUObjectArrayShutdown()
 {
 	GUObjectArray.RemoveUObjectDeleteListener(this);
-}
-
-void UBlueprintableDeveloperSettingsManager::OnFilesLoaded()
-{
-	LoadBlueprintSettings();
 }
 
 void UBlueprintableDeveloperSettingsManager::OnAssetAdded(UObject* InAsset)
