@@ -1,14 +1,14 @@
 {
 	"FileVersion": 3,
-	"Version": 1,
-	"VersionName": "1.0.0",
+	"Version": 2,
+	"VersionName": "1.0.1",
 	"FriendlyName": "Blueprintable Developer Settings",
 	"Description": "Blueprintable Developer Settings is a powerful and versatile plugin designed to enhance your Unreal Engine development workflow by seamlessly integrating configurable settings into your projects. Building upon the foundation of the C++ UDeveloperSettings class, the plugin empowers developers to create, manage, and customize settings with unparalleled ease.",
 	"Category": "Blueprints",
 	"CreatedBy": "Gradess Games",
 	"CreatedByURL": "https://stepantrofimov.com",
 	"DocsURL": "https://github.com/Gradess2019/BlueprintableDeveloperSettings",
-	"MarketplaceURL": "",
+	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/62f83acd54314725b7a3e80f1bd5bf49",
 	"SupportURL": "https://discord.gg/zFK38y68tK",
 	"CanContainContent": true,
 	"IsBetaVersion": true,
@@ -37,5 +37,8 @@
 			"Name": "EditorScriptingUtilities",
 			"Enabled": true
 		}
+	],
+	"SupportedTargetPlatforms": [
+		"Win64"
 	]
 }
